@@ -3,6 +3,7 @@
 <head>
   <title>getUserMedia to jpeg sample</title>
   <script type="text/javascript" src="./javascripts/jquery-1.9.1.min.js"></script>
+  <script src="./javascripts/headtrackr.js"></script>
   <style type="text/css">
   /* canvas { display: none;} /* 画像変換用の不可視のcanvas */
   video { display: none;}
@@ -22,7 +23,7 @@
     <video></video>
   </section>
   <section>
-    <canvas></canvas>
+      <canvas></canvas>
   </section>
 	<form>
 		Dark: <input type="num" id="dark" min="0" max="255"><br>
@@ -158,6 +159,7 @@ var myEffect;
     , $t_ = $("textarea")
     , effect = new myEffect(ctx_)
 
+
   var stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.top = '0px';
@@ -180,7 +182,9 @@ var myEffect;
   		effect.changeBlight($(this).val());
   	})
 
-
+var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
+htracker.init($v_[0], $c_[0]);
+htracker.start();
 
   // Videoの再生が始まったら、JPEGの取得を開始する。
   $v_.on("playing", function(){
@@ -191,6 +195,8 @@ var myEffect;
     $c_[0].width = w;
     $c_[0].height = h;
     $c_.css({"width": "100%"})
+
+
 
     // 1秒おきに画像に変更
     // ref http://www.slideshare.net/masayukimaekawa/java-script-14727253
@@ -214,6 +220,37 @@ var myEffect;
     }
     doToon()
   })
+
+document.addEventListener("facetrackingEvent", function( event ) {
+    // clear canvas
+    // once we have stable tracking, draw rectangle
+    if (event.detection == "CS") {
+        //overlayContext.translate(0, 0);
+        //overlayContext.rotate(event.angle-(Math.PI/2));
+
+        if(event.x < $c_[0].width / 2.0){
+            console.log('left');
+            var x = event.x + event.width;
+            var y = 0;
+            var width = $c_[0].width - event.width - event.x;
+            var height = $c_[0].height;
+            console.log('rect %d %d %d %d', x, y, width, height);
+        } else{
+            console.log('right');
+            var x = 0;
+            var y = 0;
+            var width = event.x;
+            var height = $c_[0].height;
+            console.log('rect %d %d %d %d', x, y, width, height);
+        }
+
+
+
+//					overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
+        //overlayContext.rotate((Math.PI/2)-event.angle);
+        //overlayContext.translate(-event.x, -event.y);
+    }
+});
 
 </script>
 </body>

@@ -3,6 +3,7 @@
 <head>
   <title>getUserMedia to jpeg sample</title>
   <script type="text/javascript" src="./javascripts/jquery-1.9.1.min.js"></script>
+  <script src="./javascripts/headtrackr.js"></script>
   <style type="text/css">
   /* canvas { display: none;} /* 画像変換用の不可視のcanvas */
   video { display: none;}
@@ -22,7 +23,7 @@
     <video></video>
   </section>
   <section>
-    <canvas></canvas>
+      <canvas></canvas>
   </section>
 	<form>
 		Dark: <input type="num" id="dark" min="0" max="255"><br>
@@ -158,6 +159,7 @@ var myEffect;
     , $t_ = $("textarea")
     , effect = new myEffect(ctx_)
 
+
   var stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.top = '0px';
@@ -171,6 +173,11 @@ var myEffect;
 
   })
 
+  //顔認識の開始
+  var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
+  htracker.init($v_[0], $c_[0]);
+  htracker.start();
+
   $("#dark").val(effect.dark)
   	.on("change", function(ev){
   		effect.changeDark($(this).val());
@@ -179,8 +186,6 @@ var myEffect;
   	.on("change", function(ev){
   		effect.changeBlight($(this).val());
   	})
-
-
 
   // Videoの再生が始まったら、JPEGの取得を開始する。
   $v_.on("playing", function(){
@@ -191,6 +196,8 @@ var myEffect;
     $c_[0].width = w;
     $c_[0].height = h;
     $c_.css({"width": "100%"})
+
+
 
     // 1秒おきに画像に変更
     // ref http://www.slideshare.net/masayukimaekawa/java-script-14727253
@@ -214,6 +221,28 @@ var myEffect;
     }
     doToon()
   })
+
+document.addEventListener("facetrackingEvent", function( event ) {
+    // clear canvas
+    // once we have stable tracking, draw rectangle
+    if (event.detection == "CS") {
+        if(event.x < $c_[0].width / 2.0){// 画面の左側に顔がある場合右側に吹き出しを出せる。
+            console.log('left');
+            var x = event.x + event.width;
+            var y = 0;
+            var width = $c_[0].width - event.width - event.x;
+            var height = $c_[0].height;
+            //console.log('rect left: %d top: %d width: %d height: %d', x, y, width, height);
+        } else{// 画面の右側に顔がある場合左側に吹き出しを出せる。
+            console.log('right');
+            var x = 0;
+            var y = 0;
+            var width = event.x;
+            var height = $c_[0].height;
+            //console.log('rect left: %d top: %d width: %d height: %d', x, y, width, height);
+        }
+    }
+});
 
 </script>
 </body>

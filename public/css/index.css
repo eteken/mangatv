@@ -1,0 +1,11 @@
+/* canvas { display: none;} /* 画像変換用の不可視のcanvas */
+video { display: none; }
+form {
+    position:absolute;
+    top: 0px;
+    right: 0px;
+    background: #fff;
+    border: 1px solid black;
+    text-align: right;
+    padding: 3px;
+}

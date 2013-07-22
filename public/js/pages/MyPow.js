@@ -56,7 +56,7 @@
 	    rays: 500,
 	    probability: 0.25,
 	    radius :faceWidth * 1.3,
-	    originY:0,
+	    originY:90,
 	    originEl:'#face',
 	    bgColorStart: 'rgba(255, 255, 255, 0)',
 	    rayColorStart: 'rgba(0, 0, 0, 1)',

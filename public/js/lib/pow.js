@@ -78,7 +78,9 @@ DEALINGS IN THE SOFTWARE.
       }));
 
       try{
-        var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:fixed;top:-999999px"></canvas>').appendTo(d.body).get(0);
+        // var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:fixed;top:-999999px"></canvas>').appendTo(d.body).get(0);
+        console.log($el);
+        var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:absolute;top:0;left:0"></canvas>').appendTo($el).get(0);
         var ctx = canvas.getContext('2d');
       } catch(err) {
         return;
@@ -135,14 +137,15 @@ DEALINGS IN THE SOFTWARE.
       }
 
       // set the data as css to the element
-      var data = canvas.toDataURL("image/png");
-      $(canvas).remove();
-      $el.css({
-        'background-image':'url("'+data+'")',
-        'background-repeat':'no-repeat',
-        'background-position':'50% 50%',
-        'background-size':'cover'
-      });
+      // var data = canvas.toDataURL("image/png");
+      // canvas.appendTo("#full")
+      // $(canvas).remove();
+      // $el.css({
+      //   'background-image':'url("'+data+'")',
+      //   'background-repeat':'no-repeat',
+      //   'background-position':'50% 50%',
+      //   'background-size':'cover'
+      // });
     };
 
   })();

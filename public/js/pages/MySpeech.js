@@ -11,6 +11,7 @@
 	  	this.recognition.continuous = true;
 	  	this.recognition.interimResults = true;
 	  	this.recognition.lang = 'ja-JP';
+        // this.recognition.lang = 'en';
 
 	  	this.recognizing = false;
 	  	this._setupHandler();

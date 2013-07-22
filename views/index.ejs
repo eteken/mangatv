@@ -6,7 +6,7 @@
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     <link rel=stylesheet href="css/index.css">
   </head>
-  <body class="clearfix">
+  <body class="_clearfix">
     <div id="notification-area">
       <ul id="notifications">
       </ul>
@@ -16,11 +16,17 @@
       <video></video>
       <canvas></canvas>
       <div id="slide"></div>
+      <div id="face"></div>
+      <div id="full"></div>
     </div>
 
     <form>
       Dark: <input type="num" id="dark" min="0" max="255"><br>
-      Blight: <input type="num" id="blight" min="0" max="10">
+      Blight: <input type="num" id="blight" min="0" max="10"><br>
+      <button name="pow" id="pow">pow</button>
+      <button name="go3" id="go3">go3</button>
+      <button name="dot" id="dot">dot</button>
+      <div id="rec-log">音声認識：<span id="rec-state"></span></div>
     </form>
 
 
@@ -31,6 +37,13 @@
     <script src="http://zapper.kakkoii.tv/js/common.js"></script>
     <script src="http://zapper.kakkoii.tv/js/zapper.js"></script>
     <script src="js/lib/stats.js"></script>
+    <script src="js/lib/headtrackr.js"></script>
+    <script src="js/lib/pow.js"></script>
+    <script src="js/pages/base.js"></script>
+    <script src="js/pages/MyEffect.js"></script>
+    <script src="js/pages/MySpeech.js"></script>
+    <script src="js/pages/MyPow.js"></script>
+    <script src="js/pages/StartZapper.js"></script>
     <script src="js/pages/index.js"></script>
   </body>
 </html>

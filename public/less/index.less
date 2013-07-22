@@ -1,5 +1,91 @@
-/* canvas { display: none;} /* 画像変換用の不可視のcanvas */
-video { display: none; }
+@charset 'utf-8';
+
+@import 'common.less';
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@header-height: 40px;
+#notification-area {
+    height: @header-height;
+    line-height: @header-height;
+    background-color: #171717;
+    color: white;
+    font-size: @header-height - 8px;
+}
+
+#notifications {
+    .clearfix;
+    overflow: hidden;
+    width: 100%;
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    li {
+        @anim-duration: 10s;
+        @anim-name: slider;
+        @anim-func: linear;
+        padding: 4px 8px;
+        opacity: 0;
+        position: relative;
+        float: left;
+        height: @header-height - 8px;
+        -webkit-animation-name: @anim-name;
+        -webkit-animation-duration: @anim-duration;
+        -webkit-animation-timing-function: @anim-func;
+        -moz-animation-name: @anim-name;
+        -moz-animation-duration: @anim-duration;
+        -moz-animation-timing-function: @anim-func;
+        animation-name: @anim-name;
+        animation-duration: @anim-duration;
+        animation-timing-function: @anim-func;
+        .icon {
+            width: 32px;
+            height: 32px;
+        }
+        .message {
+        }
+    }
+}
+
+.template {
+    display: none;
+}
+
+#video-container {
+    position:absolute;
+    top: @header-height;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow:auto;
+    width: 100%;
+}
+
+@-webkit-keyframes slider {
+    0% {
+        left: 100%;
+        opacity: 1;
+    }
+    90% {
+        left: 10%;
+        opacity: 1;
+    }
+    100% {
+        left: 0%;
+        opacity: 0;
+    }
+}
+
+video {
+    display: none;
+}
+
 form {
     position:absolute;
     top: 0px;

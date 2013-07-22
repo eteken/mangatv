@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Manga TV</title>
-    <link rel="stylesheet" href="css/index.css">
+    <meta charset="UTF-8">
+    <title>マンガテレビ</title>
     <script src="js/lib/jquery-1.9.1.min.js"></script>
-    <!--
-        <script src="./javascripts/headtrackr.js"></script>
-        -->
+    <link rel=stylesheet href="css/index.css">
   </head>
-  <body>
-    <video></video>
-    <canvas></canvas>
+  <body class="clearfix">
+    <div id="notification-area">
+      <ul id="notifications">
+      </ul>
+    </div>
+    
+    <div id="video-container">
+      <video></video>
+      <canvas></canvas>
+      <div id="slide"></div>
+    </div>
+
     <form>
       Dark: <input type="num" id="dark" min="0" max="255"><br>
       Blight: <input type="num" id="blight" min="0" max="10">
     </form>
+
+
+
+    <script src="http://zapper.kakkoii.tv/js/lib/underscore-min.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/lib/underscore.string.min.js"></script>
+    <script src="http://zapper.kakkoii.tv/socket.io/socket.io.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/common.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/zapper.js"></script>
     <script src="js/lib/stats.js"></script>
     <script src="js/pages/index.js"></script>
   </body>

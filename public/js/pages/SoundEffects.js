@@ -11,7 +11,28 @@
         img.src = '/img/dot_line_200.png';
         return img;
     })();
-
+    var donImg = (function() {
+        var img = new Image();
+        img.src = '/img/don.png';
+        return img;
+    })();
+    var banImg = (function() {
+        var img = new Image();
+        img.src = '/img/ban.png';
+        return img;
+    })();
+    var commandImgs = {
+        don: {
+            img: donImg,
+            x: 200,
+            y: 200
+        },
+        ban: {
+            img: banImg,
+            x: 200,
+            y: 200
+        }
+    };
     
     // 5zap=ゴ
     
@@ -113,6 +134,12 @@
                 console.log('x=' + x + ',y=' + y + ',w=' + img.naturalWidth + ',h=' + img.naturalHeight);
 
             }
+        },
+        command: function(cmd) {
+            var commandImgInfo = commandImgs[cmd];
+            var commandImg = commandImgInfo.img;
+            
+            this.ctx.drawImage(commandImg, commandImgInfo.x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
         }
     };
     global.SoundEffects = SoundEffects;

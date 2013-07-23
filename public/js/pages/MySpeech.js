@@ -91,10 +91,12 @@
             switch (this.tmp) {
             case 'ドン': case 'ドーン':
             case 'どん': case 'どーん':
+                MyPow.pow(ctx);
                 soundEffects.command('don');
                 return;
             case 'バン': case 'バーン':
             case 'ばん': case 'ばーん':
+                MyPow.pow(ctx);
                 soundEffects.command('ban');
                 return;
             }

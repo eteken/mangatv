@@ -1,6 +1,6 @@
 (function(global){
 	//顔認識の開始
-	var scale = calc_scale();
+	var scale;
 	var faceWidth = 0;
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	  htracker.init($("video")[0], $("canvas")[0]);
@@ -11,7 +11,8 @@
 	    // clear canvas
 	    // once we have stable tracking, draw rectangle
 	    if (event.detection == "CS") {
-	      showFaceSquare(event);
+			scale = calc_scale();
+	    	showFaceSquare(event);
 	      //showPow();
 	    }
 	});
@@ -29,7 +30,7 @@
 	}
 
 	var faceWidth;
-	function showFaceSquare(event, scale){
+	function showFaceSquare(event){
 	    var offset = $("canvas").position().left;
 
 	    faceWidth = event.width;

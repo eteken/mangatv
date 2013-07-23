@@ -30,8 +30,8 @@ $("#blight").val(effect.blight)
         effect.changeBlight($(this).val());
     })
 $("#pow").on("click", function(e){e.preventDefault();MyPow.pow();})
-$("#go3").on("click", function(e){e.preventDefault();MyPow.go3();})
-$("#dot").on("click", function(e){e.preventDefault();MyPow.dot();})
+$("#go3").on("click", function(e){e.preventDefault();MyGogogo.go3();})
+$("#dot").on("click", function(e){e.preventDefault();MyGogogo.dot();})
 
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){

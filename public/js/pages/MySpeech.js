@@ -14,6 +14,7 @@
         // this.recognition.lang = 'en';
 
 	  	this.recognizing = false;
+        this.errorHappenned = false;
 	  	this._setupHandler();
 
 	  	this.recognition.start();
@@ -24,7 +25,8 @@
     		$("#rec-state").text("認識待ち")
     		this.recognizing = true;
     	}.bind(this)
-    	this.recognition.onerror = function(){
+    	this.recognition.onerror = function(ev){
+            console.log(ev);
     		$("#rec-state").text("エラー発生")
     		this.recognizing = false;
     	}.bind(this)

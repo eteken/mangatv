@@ -69,49 +69,7 @@
 	        powtimer_ = null;
 	    }, 3000);
 	}
-	var arr_ = [1.1, 1.0, 0.9, 1.0, 1.1]
-	function showGogogo(){
-		showText_("./img/go_line.png")
-	}
-	function showDot(){
-		showText_("./img/dot_line.png")
-	}
-	function showText_(img) {
-		_clear();
-		if(!!powtimer_){
-			clearTimeout(powtimer_)
-		}
-
-		arr_.shuffle();
-
-		$("#full").empty().css("padding-top", 40 * arr_[0] * 2 + "px");
-		var w_ = $("canvas").width() / 4.5;
-
-		if(img.indexOf("go") > 0) {
-			for(var i = 0, l = arr_.length; i < l; i++){
-				var $el = $("<img>").attr("src", img)
-					.css("width", w_ * arr_[i])
-					.css("margin-left", i === 0 ? "10px" : (-70 * arr_[i]) +"px")
-
-
-				.appendTo("#full")
-			}
-		} else {
-			[1.5, 1.2].forEach(function(n){
-				console.log(n);
-				var n_ = w_ * n;
-				console.log(n_);
-				$("<img>").attr("src", img).css("width", n_).appendTo("#full")
-			})
-		}
-	    powtimer_ = setTimeout(function(e){
-	    	_clear();
-	        powtimer_ = null;
-	    }, 3000);
-	}
 
 	global.MyPow = {};
 	MyPow.pow = showPow;
-	MyPow.go3 = showGogogo;
-	MyPow.dot = showDot;
 }(window));

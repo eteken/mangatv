@@ -60,16 +60,18 @@ $(function() {
                     var $li = $(document.createElement('li'));
 
                     if (data.type === 'zap') {
+                        /*
                         var rnd = Math.random();
                         console.log(value);
                         if(value.count === 5) {
                             if (rnd < 0.5) {
                                 MyPow.pow()
                             } else {
-                                MyPow.go3();
+                                //MyPow.go3();
                             }
-
                         }
+                        */
+                        soundEffects.addCount(value.count);
                         for (var i = 0, n = value.count; i < n; i++) {
                             var $icon = $(document.createElement('img'));
                             $icon.addClass('icon').attr({
@@ -95,6 +97,8 @@ $(function() {
                     $li.appendTo($notifications);
                 }
             }, 300);
+
+            
         });
     }
     init();

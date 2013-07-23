@@ -5,7 +5,8 @@ var $v_ = $("video")
 , ctx_ = $c_[0].getContext('2d')
 , $t_ = $("textarea")
 , effect = new myEffect(ctx_)
-, mySpeech = new MySpeech();
+, mySpeech = new MySpeech()
+, soundEffects = new SoundEffects($c_[0]);
 
 
 var stats = new Stats();
@@ -61,6 +62,7 @@ $v_.on("playing", function(){
 
         ctx_.putImageData(toon, 0, 0)
         mySpeech.appendCanvas(ctx_, w, h)
+        soundEffects.draw();
         requestAnimationFrame(doToon)
         stats.update();
     }

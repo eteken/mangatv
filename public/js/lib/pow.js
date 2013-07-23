@@ -31,7 +31,8 @@ DEALINGS IN THE SOFTWARE.
     bgColorEnd: 'rgba(0,0,0,0.2)',
     rayColorStart: 'hsla(0,0%,100%,0.2)',
     rayColorEnd: 'hsla(0,0%,100%,0.3)',
-    sizingRatio: 1
+    sizingRatio: 1,
+    ctx: null
   };
 
   $.fn.pow = (function(){
@@ -77,22 +78,26 @@ DEALINGS IN THE SOFTWARE.
         return Math.sqrt(Math.pow(c.x - originX, 2) + Math.pow(c.y - originY, 2));
       }));
 
+      var ctx;
       try{
-        // var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:fixed;top:-999999px"></canvas>').appendTo(d.body).get(0);
-        console.log($el);
-        var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:absolute;top:0;left:0"></canvas>').appendTo($el).get(0);
-        var ctx = canvas.getContext('2d');
+        if(!!args.ctx) {
+          ctx = args.ctx;
+        } else {
+          // var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:fixed;top:-999999px"></canvas>').appendTo(d.body).get(0);
+          var canvas = $('<canvas width="'+width+'" height="'+height+'" style="position:absolute;top:0;left:0"></canvas>').appendTo($el).get(0);
+          ctx = canvas.getContext('2d');
+        }
       } catch(err) {
         return;
       }
 
       // build the background gradient
-      var bgGrad = ctx.createRadialGradient(
-        originX, originY, 0, // inner circle, infinitely small
-        originX, originY, radius // outer circle, will just cover canvas area
-      );
-      bgGrad.addColorStop(0, args.bgColorStart);
-      bgGrad.addColorStop(1, args.bgColorEnd);
+      // var bgGrad = ctx.createRadialGradient(
+      //   originX, originY, 0, // inner circle, infinitely small
+      //   originX, originY, radius // outer circle, will just cover canvas area
+      // );
+      // bgGrad.addColorStop(0, args.bgColorStart);
+      // bgGrad.addColorStop(1, args.bgColorEnd);
 
       // build the foreground gradient
       var rayGrad = ctx.createRadialGradient(
@@ -103,8 +108,8 @@ DEALINGS IN THE SOFTWARE.
       rayGrad.addColorStop(1, args.rayColorEnd);
 
       // fill in bg
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0,0,width,height);
+      // ctx.fillStyle = bgGrad;
+      // ctx.fillRect(0,0,width,height);
 
       // draw rays
       ctx.fillStyle = rayGrad;
@@ -132,9 +137,9 @@ DEALINGS IN THE SOFTWARE.
             originX + args.radius  * Math.cos(traversal * 2 * Math.PI) , 
             originY + args.radius  * Math.sin(traversal * 2 * Math.PI)
           );
-          ctx.fill();
         }
       }
+      ctx.fill();
 
       // set the data as css to the element
       // var data = canvas.toDataURL("image/png");

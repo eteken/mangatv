@@ -10,13 +10,16 @@ body {
 	background: #eee;
 }
 
-#face,#full{
+#face,#full,#face-orig{
 	position:absolute;
 	text-align: center;
 }
 
 #face {
 	border: 1px dashed #666;
+}
+#face-orig {
+	border: 1px dashed red;
 }
 
 #rec-log {

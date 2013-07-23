@@ -63,6 +63,7 @@ $v_.on("playing", function(){
         ctx_.putImageData(toon, 0, 0)
         mySpeech.appendCanvas(ctx_, w, h)
         soundEffects.draw();
+        MyPow.pow(ctx_);
         requestAnimationFrame(doToon)
         stats.update();
     }

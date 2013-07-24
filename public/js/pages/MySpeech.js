@@ -96,6 +96,8 @@
                 return;
             case 'バン': case 'バーン':
             case 'ばん': case 'ばーん':
+            case 'パン': case '3':
+            case 'ワーナー': case 'バーナー':
                 MyPow.pow(ctx);
                 soundEffects.command('ban');
                 return;

@@ -1,4 +1,5 @@
 (function(global){
+    var recognitionIsFinal = false;
     var MySpeech = function(){
         this.buffer = [];
         this.tmp = "";
@@ -40,6 +41,7 @@
                 if (event.results[i].isFinal) {
                     this._push(event.results[i][0].transcript)
                     this.recognition.stop();
+                    recognitionIsFinal = true;
                 } else {
                     var candidate = event.results[i][0].transcript
                     if(candidate.length > 10) {
@@ -98,13 +100,23 @@
                 soundEffects.command('ban');
                 return;
             }
+            var recognized = this.tmp.indexOf("...") === 0;
             ctx.font = "bold 30px 'ＭＳ ゴシック'"; 
             ctx.textAlign = "center"
-            ctx.fillStyle = this.tmp.indexOf("...") === 0 ? "#666" : "#000"
+            ctx.fillStyle = recognized ? "#666" : "#000"
             ctx.fillText(this.tmp, w / 2, h-30, w-20);
+            if (recognitionIsFinal) {
+                canvasSaver.save(function(error, result) {
+                    if (error) {
+                        console.log('failed to save file');
+                    } else {
+                        console.log('saved!');
+                    }
+                });
+                recognitionIsFinal = false;
+            }
         }
     }
-
     global.MySpeech = MySpeech;
 }(window))
 

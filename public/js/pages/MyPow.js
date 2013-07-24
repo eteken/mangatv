@@ -1,5 +1,7 @@
 (function(global){
 	//顔認識の開始
+	var scale;
+	var faceWidth = 0;
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	  htracker.init($("video")[0], $("canvas")[0]);
 	  htracker.start();
@@ -9,8 +11,8 @@
 	    // clear canvas
 	    // once we have stable tracking, draw rectangle
 	    if (event.detection == "CS") {
-	      var scale = calc_scale();
-	      showFaceSquare(event, scale);
+			scale = calc_scale();
+	    	showFaceSquare(event);
 	      //showPow();
 	    }
 	});
@@ -28,7 +30,7 @@
 	}
 
 	var faceWidth;
-	function showFaceSquare(event, scale){
+	function showFaceSquare(event){
 	    var offset = $("canvas").position().left;
 
 	    faceWidth = event.width;
@@ -39,6 +41,12 @@
 	  $("#face").css('height', scale*event.height+'px')
 	  $("#face").css('-webkit-transform', 'rotate('+ (event.angle-1.57)*(57.3) + 'deg)')
 
+	  $("#face-orig").css('left', (event.x - event.width / 2)+'px')
+	  $("#face-orig").css('top', (event.y - event.height / 2)+'px')
+	  $("#face-orig").css('width', event.width+'px')
+	  $("#face-orig").css('height', event.height+'px')
+	  $("#face-orig").css('-webkit-transform', 'rotate('+ (event.angle-1.57)*(57.3) + 'deg)')
+
 	}
 
 	var powtimer_ = null;
@@ -47,27 +55,34 @@
 
 	    $('#full').css("background", "none").empty();
 	}
-	function showPow(){
-		_clear();
-	    if(!!powtimer_) {
-	        clearTimeout(powtimer_)
-	    }
-	  $('#full').pow({
-	    rays: 500,
-	    probability: 0.25,
-	    radius :faceWidth * 1.3,
-	    originY:90,
-	    originEl:'#face',
-	    bgColorStart: 'rgba(255, 255, 255, 0)',
-	    rayColorStart: 'rgba(0, 0, 0, 1)',
-	    bgColorEnd: 'rgba(0, 0, 0, 0)',
-	    rayColorEnd: 'rgba(0, 0, 0, 1)',
-	    sizingRatio: 4
-	  });
-	    powtimer_ = setTimeout(function(e){
-	    	_clear();
-	        powtimer_ = null;
-	    }, 3000);
+	function showPow(ctx){
+		var faceWidth_;
+		faceWidth_ = (!!ctx ? faceWidth : scale * faceWidth);
+		if(!!ctx === false) {
+			_clear();
+		    if(!!powtimer_) {
+		        clearTimeout(powtimer_)
+		    }
+		}
+		$('#full').pow({
+		    rays: 750,
+		    probability: 0.25,
+		    radius :faceWidth /2,
+		    originY:90,
+		    originEl: (!!ctx ? '#face-orig' : '#face'),
+		    bgColorStart: 'rgba(255, 255, 255, 0)',
+		    rayColorStart: 'rgba(0, 0, 0, 1)',
+		    bgColorEnd: 'rgba(0, 0, 0, 0)',
+		    rayColorEnd: 'rgba(0, 0, 0, 1)',
+		    sizingRatio: 16,
+		    ctx: ctx
+		});
+		if(!!ctx === false) {
+		    powtimer_ = setTimeout(function(e){
+		    	_clear();
+		        powtimer_ = null;
+		    }, 3000);
+		}
 	}
 
 	global.MyPow = {};

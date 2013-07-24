@@ -75,7 +75,12 @@
 	}
 	function showPow(ctx){
 		var faceWidth_;
-		faceWidth_ = (!!ctx ? faceWidth : scale * faceWidth);
+		if(!!ctx) {
+			var faceWidth_ = faceWidth;
+		} else {
+			var faceWidth_ = scale * faceWidth;
+		}
+
 		if(!!ctx === false) {
 			_clear();
 		    if(!!powtimer_) {
@@ -85,7 +90,7 @@
 		$('#full').pow({
 		    rays: 750,
 		    probability: 0.25,
-		    radius :faceWidth /2,
+		    radius :faceWidth_,
 		    originY:90,
 		    originEl: (!!ctx ? '#face-orig' : '#face'),
 		    bgColorStart: 'rgba(255, 255, 255, 0)',

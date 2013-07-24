@@ -2,7 +2,9 @@
 	//顔認識の開始
 	var scale;
 	var faceWidth = 0;
-	if(false){
+
+	// 以下をtrueにすると、faceTrackingが行われるようになる。
+	if(true){
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	  htracker.init($("video")[0], $("canvas")[0]);
 	  htracker.start();

@@ -73,6 +73,7 @@ var myEffect;
     // 15 msec // とりあえず、エッジ抽出を外した
     // 7 msec // 2の乗数計算をビットシフトに変更
     // 12 - 13mseca // エッジ抽出を入れつつ、配列をやめたり、インライン展開したり
+    // 9 - 10msec // 3の割り算を近似計算
     myEffect.prototype.toon = function(img, width, height){
         var dotList = img.data;
         // var edge = this.detect_edge(img, width, height)

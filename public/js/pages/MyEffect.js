@@ -85,8 +85,6 @@ var myEffect;
         var a0, a1, a2, a3;
         var c, i, e;
         var p;
-        var cons = 715827883;
-        // for(var i = 0, l = dotList.length; i < l; i+=4){
         for(var y = 1; y < height-1; y++){
             for(var x = 1; x < width-1; x++){
                 c = y * width + x;

@@ -2,7 +2,7 @@ $(function() {
     var zapper = new Zapper({
         from: 1, // PCからの利用
         serverUrl: 'http://zapper.kakkoii.tv:80'
-        //serverUrl: 'http://localhost:3001'
+//        serverUrl: 'http://localhost:3001'
     })
     , currentEvent
 //    , zaps = []

@@ -58,6 +58,47 @@
                         callback(error);
                     });
             });
+        },
+        list: function(callback) {
+            var self = this;
+            self.parentDir.createReader().readEntries(
+                function(entries) {
+                    console.log(entries.length);
+                    var entryURLs = [];
+                    for (var i = 0, n = entries.length; i < n; i++) {
+                        entryURLs.push(entries[i].toURL());
+                    };
+                    entryURLs.sort();
+                    callback(null, entryURLs);
+                },
+                function(error) {
+                    callback(error);
+                });
+        },
+        clear: function(callback) {
+            this.parentDir.createReader().readEntries(
+                function(entries) {
+                    var removed = 0;
+                    var error = null;
+                    for (var i = 0, n = entries.length; i < n; i++) {
+                        if (error) {
+                            callback(error);
+                            return;
+                        }
+                        var entry = entries[i];
+                        entry.remove(function() {
+                            removed++;
+                            if (removed === n) {
+                                callback();
+                            }
+                        }, function(err) {
+                            error = err;
+                        });
+                    }
+                },
+                function(error) {
+                    callback(error);
+                });
         }
     };
     global.CanvasSaver = CanvasSaver;

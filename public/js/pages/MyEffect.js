@@ -12,6 +12,11 @@ var myEffect;
         this.dark = localStorage.dark || option.dark || 57; // 暗さの境界値
 
         this.ctx = ctx; // canvas context object
+        this.img_toon;
+        this.dotList;
+        this.width;
+        this.height;
+        this.data_quant = [];
     }
 
     myEffect.prototype.changeBlight = function(num){
@@ -57,50 +62,94 @@ var myEffect;
         return img_edge;
     };
 
+    myEffect.prototype.set = function(width, height) {
+        this.width = width; this.height = height;
+        this.img_toon = this.ctx.createImageData(width, height)
+    }
+
+
+    // 35 - 37msec // もともと
+    // 24 msec // 階調化を比較演算
+    // 15 msec // とりあえず、エッジ抽出を外した
+    // 7 msec // 2の乗数計算をビットシフトに変更
+    // 12 - 13mseca // エッジ抽出を入れつつ、配列をやめたり、インライン展開したり
     myEffect.prototype.toon = function(img, width, height){
         var dotList = img.data;
-        var edge = this.detect_edge(img, width, height)
+        // var edge = this.detect_edge(img, width, height)
 
-        var img_toon = this.ctx.createImageData(width, height)
+        this.data_quant.length = 0;
+        var gray, around;
+        var tmp;
+        // var img_toon = this.ctx.createImageData(width, height)
+        var img_toon = this.img_toon
+        var a0, a1, a2, a3;
+        var c, i, e;
+        var p;
+        var cons = 715827883;
+        // for(var i = 0, l = dotList.length; i < l; i+=4){
+        for(var y = 1; y < height-1; y++){
+            for(var x = 1; x < width-1; x++){
+                c = y * width + x;
 
-        for(var i = 0, l = dotList.length; i < l; i+=4){
-            var r = dotList[i]
-            , g = dotList[i+1]
-            , b = dotList[i+2]
-            , gray = (r + g + b) / 3;
+                i = c << 2;
 
-            // 明瞭化処理
-            if(gray > this.dark) {
-                gray = gray * this.blight;
-                gray = (gray > 255) ? 255 : gray;
-            }
-            //階調化
-            var gra = parseInt(gray / this.TONE);
 
-            // 白色化
-            gra = (gra === 2) ? 255  : gra;
+                tmp = (c - width) << 2;
+                a0 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                tmp = (c - 1) << 2;
+                a1 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                tmp = (c + 1) << 2;
+                a2 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                tmp = (c + width) << 2;
+                a3 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                gray = (dotList[i] + dotList[i+1] + dotList[i + 2] ) /3; 
 
-            //　スクリーントーン化 
-            if( gra === 1 ) {
-                var dx = (i % (width * 4)) / 4;
-                var dy = parseInt(i / (width * 4));
-                var dx_ = dx % 4;
-                var dy_ = dy % 4;
+                around = (a0 + a1 + a2 + a3) >> 2;
+                if(around < (gray & 0xc0)) e = true;
+                else e = false;
 
-                if( dx_ === 0 && dy_ === 0) {
+                // 明瞭化処理
+                if(gray > this.dark) {
+                    gray = (gray * this.blight);
+                }
+                //階調化
+                var gra;
+                if(gray < 85) {
                     gra = 0;
-                } else if(dx_ === 2 && dy_ === 2){
-                    gra = 0;
+                } else if(gray < 170) {
+                    gra = 1;
                 } else {
                     gra = 255;
                 }
-            };
 
-            //エッジ追加
-            img_toon.data[i] = edge.data[i] !== 0 ? gra : edge.data[i];
-            img_toon.data[i + 1] = edge.data[i + 1] !== 0 ? gra : edge.data[i + 1];
-            img_toon.data[i + 2] = edge.data[i + 2] !== 0 ? gra : edge.data[i + 2];
-            img_toon.data[i + 3] = edge.data[i] !== 0 ? img.data[i + 3] : edge.data[i + 3];
+                //　スクリーントーン化 
+                if( gra === 1 ) {
+                    var dx = (i % (width << 2)) >> 2;
+                    var dy = (i / (width << 2))|0;
+                    var dx_ = dx & 0x03;
+                    var dy_ = dy & 0x03;
+
+                    if( dx_ === 0 && dy_ === 0) {
+                        gra = 0;
+                    } else if(dx_ === 2 && dy_ === 2){
+                        gra = 0;
+                    } else {
+                        gra = 255;
+                    }
+                };
+
+                //漫画生成
+                if(e) {
+                    img_toon.data[i] = 0;
+                    img_toon.data[i+1] = 0;
+                    img_toon.data[i+2] = 0;
+                } else {
+                    img_toon.data[i] = gra;
+                    img_toon.data[i+1] = gra;
+                    img_toon.data[i+2] = gra;
+                }
+                img_toon.data[i+3] = 0xff; //img.data[i + 3];
+            }
         }
         return img_toon;
     }

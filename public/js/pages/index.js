@@ -64,6 +64,8 @@ $v_.on("playing", function(){
     var w_ = $c_.width();
     var h_ = $c_.height();
 
+    effect.set(w,h);
+
     $("#full").css({"left": pos_.left + "px", "top": 0, "width": w_, "height": h_})
 
 

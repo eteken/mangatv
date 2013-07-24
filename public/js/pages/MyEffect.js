@@ -85,6 +85,11 @@ var myEffect;
         var a0, a1, a2, a3;
         var c, i, e;
         var p;
+
+        // 3の割り算を高速化
+        // 下の定数だと誤差はでるが、まぁ許せるレベル
+        // 参考 http://www.azillionmonkeys.com/qed/adiv.html
+        var CONST = 11, C_SHIFT = 5;
         for(var y = 1; y < height-1; y++){
             for(var x = 1; x < width-1; x++){
                 c = y * width + x;
@@ -93,14 +98,14 @@ var myEffect;
 
 
                 tmp = (c - width) << 2;
-                a0 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                a0 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) * CONST >> C_SHIFT) & 0xc0;
                 tmp = (c - 1) << 2;
-                a1 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                a1 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) * CONST >> C_SHIFT) & 0xc0;
                 tmp = (c + 1) << 2;
-                a2 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
+                a2 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) * CONST >> C_SHIFT) & 0xc0;
                 tmp = (c + width) << 2;
-                a3 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) /3) & 0xc0;
-                gray = (dotList[i] + dotList[i+1] + dotList[i + 2] ) /3; 
+                a3 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) * CONST >> C_SHIFT) & 0xc0;
+                gray = (dotList[i] + dotList[i+1] + dotList[i + 2] ) * CONST >> C_SHIFT; 
 
                 around = (a0 + a1 + a2 + a3) >> 2;
                 if(around < (gray & 0xc0)) e = true;

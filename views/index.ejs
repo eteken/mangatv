@@ -24,11 +24,12 @@
     <form>
       Dark: <input type="num" id="dark" min="0" max="255"><br>
       Blight: <input type="num" id="blight" min="0" max="10"><br>
-      <button name="pow" id="pow">pow</button>
-      <button name="go3" id="go3">go3</button>
-      <button name="dot" id="dot">dot</button>
+      <select id="command">
+        <option value="don">ドンッ！</option>
+      </select>
+      <button type="button" id="soundCommandButton">音声コマンド送信</button>
       <div id="rec-log">音声認識：<span id="rec-state"></span></div>
-      <button id="saveCanvasButton" type="button">スナップショットを撮る</button>
+      <input type="checkbox" id="saveCanvas"><label for="saveCanvas">スナップショットを撮る</label>
     </form>
 
 

@@ -1,5 +1,4 @@
 (function(global){
-    var recognitionIsFinal = false;
     var MySpeech = function(){
         this.buffer = [];
         this.tmp = "";
@@ -35,20 +34,23 @@
             $("#rec-state").text("終了")
             this.recognizing = false;
         }.bind(this)
-
+        var self = this;
         this.recognition.onresult = function(event) {
             for (var i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
-                    this._push(event.results[i][0].transcript)
+                    var result = event.results[i][0].transcript;
+                    this._push(result)
                     this.recognition.stop();
-                    recognitionIsFinal = true;
+                    if (typeof self.onRecognized === 'function') {
+                        self.onRecognized(result);
+                    }
                 } else {
                     var candidate = event.results[i][0].transcript
                     if(candidate.length > 10) {
                         this._push(candidate)
                         this.recognition.stop();
                     } else {
-                        this._push("... 認識中")
+                        this._push("...")
                         $("#rec-state").text("認識中："+candidate)
                     }
                 }
@@ -109,16 +111,6 @@
             ctx.textAlign = "center"
             ctx.fillStyle = recognized ? "#666" : "#000"
             ctx.fillText(this.tmp, w / 2, h-30, w-20);
-            if (recognitionIsFinal) {
-                canvasSaver.save(function(error, result) {
-                    if (error) {
-                        console.log('failed to save file');
-                    } else {
-                        console.log('saved!');
-                    }
-                });
-                recognitionIsFinal = false;
-            }
         }
     }
     global.MySpeech = MySpeech;

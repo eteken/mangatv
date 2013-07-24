@@ -1,31 +1,25 @@
 (function(global) {
     'use strict';
 
-    var goImg = (function() {
+    function loadImage(src, onload) {
         var img = new Image();
-        img.src = '/img/go_line_200.png';
+        img.src = src;
+        img.onload = onload;
         return img;
-    })();
-    var dotImg = (function() {
-        var img = new Image();
-        img.src = '/img/dot_line_200.png';
-        return img;
-    })();
-    var donImg = (function() {
-        var img = new Image();
-        img.src = '/img/don.png';
-        return img;
-    })();
-    var banImg = (function() {
-        var img = new Image();
-        img.src = '/img/ban.png';
-        return img;
-    })();
+    }
+    
+    var goImg = loadImage('/img/go.png');
+    var dotImg = loadImage('/img/dot.png');
+    var donImg = loadImage('/img/don.png');
+    var banImg = loadImage('/img/ban.png');
+    var zawaImg = loadImage('/img/zawa.png');
+    var shi_nImg = loadImage('/img/shi-n.png');
+    
     var commandImgs = {
         don: {
             img: donImg,
             x: 200,
-            y: 200
+            y: 20
         },
         ban: {
             img: banImg,
@@ -41,6 +35,7 @@
     // カウントが5を超えていたら、一つ「ゴ」を出す。
     // カウントが5未満だったら、「ゴ」が一つ前に出ていれば「...」を、それ以外は何もしない。
     var GO_COUNT = 5;
+    var ZAWA_COUNT = 3;
     var ANIM_INTERVAL = 1000;
 
     function SoundEffects(canvas, options) {
@@ -67,9 +62,16 @@
                         timestamp: Date.now()
                     });
                     self.count -= GO_COUNT;
+                } else if (self.count >= ZAWA_COUNT) {
+                    imgList.push({
+                        type: 'zawa',
+                        img: zawaImg,
+                        timestamp: Date.now()
+                    });
+                    self.count -= ZAWA_COUNT;
                 } else {
-                    // 最後が「・・・」以外の文字で終わっていたら、「・・・」を出す
-                    if (imgList.length > 0 && imgList[imgList.length - 1].type !== 'dot') {
+                    // 最後が「ゴ」で終わっていたら、「・・・」を出す
+                    if (imgList.length > 0 && imgList[imgList.length - 1].type === 'go') {
                         imgList.push({
                             type: 'dot',
                             img: dotImg,
@@ -88,6 +90,7 @@
                 drawFrame();
             }
         },
+        prevDraw: 0,
         draw: function() {
             var self = this;
             var imgList = this._imgList;
@@ -95,9 +98,36 @@
                 return;
             }
             var now = Date.now();
-            
+            var move = self.prevDraw ? (now - self.prevDraw) / 10 : 0;
             (function calcPos() {
                 var Y = 20;
+                for (var i = 0, n = imgList.length; i < n; i++) {
+                    var elem = imgList[i];
+                    if (elem.x === undefined) {
+                        // まず最初は画面の右端から出る
+                        var x = self.canvas.width;
+                        if (i > 0) {
+                            var prevElem = imgList[i - 1];
+                            var prevElemEnd = prevElem.x + prevElem.img.naturalWidth;
+                            // 前の要素に重ならないようにする
+                            if (prevElemEnd > x) {
+                                x = prevElemEnd;
+                            }
+                        }
+                        // 画面外に消えてしまった要素は配列から削除
+                        if (x < -elem.img.naturalWidth) {
+                            imgList.shift();
+                            i--;
+                            continue;
+                        }
+                        elem.x = x;
+                    } else {
+                        elem.x -= move;
+                    }
+                    elem.y = Y;
+                }
+                
+                /*
                 var startElem = null;
                 while (true) {
                     if (imgList.length === 0) {
@@ -119,10 +149,18 @@
                 var prevElem = startElem;
                 for (var i = 1, n = imgList.length; i < n; i++) {
                     var elem = imgList[i];
-                    elem.x = prevElem.x + prevElem.img.naturalWidth;
+                    var distance = (now - elem.timestamp) / 10;
+                    var prevElemX = prevElem.x + prevElem.img.naturalWidth;
+                    // 前に表示した要素に重ならないように出す
+                    if (prevElemX > distance) {
+                        elem.x = prevElemX;
+                    } else {
+                        elem.x = distance;
+                    }
                     elem.y = Y;
                     prevElem = elem;
                 }
+                */
             })();
             
             for (var i = 0; i < imgList.length; i++) {
@@ -132,14 +170,15 @@
                 var y = elem.y;
                 self.ctx.drawImage(img, x, y, img.naturalWidth, img.naturalHeight);
                 console.log('x=' + x + ',y=' + y + ',w=' + img.naturalWidth + ',h=' + img.naturalHeight);
-
             }
+            self.prevDraw = now;
         },
         command: function(cmd) {
             var commandImgInfo = commandImgs[cmd];
             var commandImg = commandImgInfo.img;
-            
-            this.ctx.drawImage(commandImg, commandImgInfo.x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
+
+            var x = (this.canvas.width - commandImg.naturalWidth) / 2;
+            this.ctx.drawImage(commandImg, x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
         }
     };
     global.SoundEffects = SoundEffects;

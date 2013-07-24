@@ -28,6 +28,7 @@
       <button name="go3" id="go3">go3</button>
       <button name="dot" id="dot">dot</button>
       <div id="rec-log">音声認識：<span id="rec-state"></span></div>
+      <button id="saveCanvasButton" type="button">スナップショットを撮る</button>
     </form>
 
 
@@ -37,8 +38,14 @@
     <script src="http://zapper.kakkoii.tv/socket.io/socket.io.js"></script>
     <script src="http://zapper.kakkoii.tv/js/common.js"></script>
     <script src="http://zapper.kakkoii.tv/js/zapper.js"></script>
+    <!--
     <script src="js/lib/stats.js"></script>
+    -->
     <script src="js/lib/headtrackr.js"></script>
+    <!--
+    <script src="js/lib/filer.min.js"></script>
+    -->
+    <script src="js/lib/canvas-toBlob.min.js"></script>
     <script src="js/lib/pow.js"></script>
     <script src="js/pages/base.js"></script>
     <script src="js/pages/MyEffect.js"></script>
@@ -46,6 +53,7 @@
     <script src="js/pages/MyPow.js"></script>
     <script src="js/pages/MyGogogo.js"></script>
     <script src="js/pages/SoundEffects.js"></script>
+    <script src="js/pages/CanvasSaver.js"></script>
     <script src="js/pages/StartZapper.js"></script>
     <script src="js/pages/index.js"></script>
   </body>

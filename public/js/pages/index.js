@@ -6,14 +6,20 @@ var $v_ = $("video")
 , $t_ = $("textarea")
 , effect = new myEffect(ctx_)
 , mySpeech = new MySpeech()
-, soundEffects = new SoundEffects($c_[0]);
+, soundEffects = new SoundEffects($c_[0])
+, canvasSaver = new CanvasSaver($c_[0]);
 
-
+canvasSaver.init(function(error, result) {
+    if (error) {
+        console.error(error);
+    }
+});
+/*
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.top = '0px';
 document.body.appendChild(stats.domElement);
-
+*/
 // Streaming開始
 navigator.webkitGetUserMedia({video: true, audio: false}, function(stream){
     var url = window.webkitURL.createObjectURL(stream);
@@ -33,6 +39,16 @@ $("#blight").val(effect.blight)
 $("#pow").on("click", function(e){e.preventDefault();MyPow.pow();})
 $("#go3").on("click", function(e){e.preventDefault();MyGogogo.go3();})
 $("#dot").on("click", function(e){e.preventDefault();MyGogogo.dot();})
+$("#saveCanvasButton").on("click", function(e) {
+    canvasSaver.save(function(error, result) {
+        if (error) {
+            console.log('failed to save file');
+            console.error(error);
+        } else {
+            console.log('saved!');
+        }
+    });
+});
 
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
@@ -64,7 +80,7 @@ $v_.on("playing", function(){
         mySpeech.appendCanvas(ctx_, w, h)
         soundEffects.draw();
         requestAnimationFrame(doToon)
-        stats.update();
+//        stats.update();
     }
     doToon()
 })

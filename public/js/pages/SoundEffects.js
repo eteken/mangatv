@@ -1,31 +1,25 @@
 (function(global) {
     'use strict';
 
-    var goImg = (function() {
+    function loadImage(src, onload) {
         var img = new Image();
-        img.src = '/img/go_line_200.png';
+        img.src = src;
+        img.onload = onload;
         return img;
-    })();
-    var dotImg = (function() {
-        var img = new Image();
-        img.src = '/img/dot_line_200.png';
-        return img;
-    })();
-    var donImg = (function() {
-        var img = new Image();
-        img.src = '/img/don.png';
-        return img;
-    })();
-    var banImg = (function() {
-        var img = new Image();
-        img.src = '/img/ban.png';
-        return img;
-    })();
+    }
+    
+    var goImg = loadImage('/img/go.png');
+    var dotImg = loadImage('/img/dot.png');
+    var donImg = loadImage('/img/don.png');
+    var banImg = loadImage('/img/ban.png');
+    var zawaImg = loadImage('/img/zawa.png');
+    var shi_nImg = loadImage('/img/shi-n.png');
+    
     var commandImgs = {
         don: {
             img: donImg,
             x: 200,
-            y: 200
+            y: 20
         },
         ban: {
             img: banImg,
@@ -138,8 +132,9 @@
         command: function(cmd) {
             var commandImgInfo = commandImgs[cmd];
             var commandImg = commandImgInfo.img;
-            
-            this.ctx.drawImage(commandImg, commandImgInfo.x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
+
+            var x = (this.canvas.width - commandImg.naturalWidth) / 2;
+            this.ctx.drawImage(commandImg, x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
         }
     };
     global.SoundEffects = SoundEffects;

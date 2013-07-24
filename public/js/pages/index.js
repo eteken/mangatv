@@ -41,6 +41,11 @@ $("#blight").val(effect.blight)
 $("#pow").on("click", function(e){e.preventDefault();MyPow.pow();})
 $("#go3").on("click", function(e){e.preventDefault();MyGogogo.go3();})
 $("#dot").on("click", function(e){e.preventDefault();MyGogogo.dot();})
+
+var soundCommand = null;
+$('#soundCommandButton').on('click', function() {
+    soundCommand = $('#command').val();
+});
 $("#saveCanvas").on("change", function(e) {
     saveCanvasNeeded = this.checked;
 });
@@ -87,6 +92,12 @@ $v_.on("playing", function(){
                     console.log('saved!');
                 }
             });
+        }
+        if (soundCommand) {
+            soundEffects.command(soundCommand);
+            setTimeout(function() {
+                soundCommand = null;
+            }, 3000);
         }
         recognizedText = null;
         soundEffects.draw();

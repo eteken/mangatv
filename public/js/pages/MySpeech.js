@@ -11,6 +11,7 @@
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
         this.recognition.lang = 'ja-JP';
+        this.starting = true;
         // this.recognition.lang = 'en';
 
         this.recognizing = false;
@@ -18,11 +19,24 @@
         this._setupHandler();
 
         this.recognition.start();
+        if(true) {
+            var self = this;
+            $("<br>").appendTo("form")
+            $("<input type='text'>")
+                .on("change", function(e){
+                    var text_ = $(this).val();
+                    self._push(text_);
+                    $(this).val("")
+                })
+                .appendTo("form");
+
+        }
     }
 
     MySpeech.prototype._setupHandler = function(){
         this.recognition.onstart = function(){
             $("#rec-state").text("認識待ち")
+            this.starting = false;
             this.recognizing = true;
         }.bind(this)
         this.recognition.onerror = function(ev){
@@ -59,7 +73,7 @@
 
         //restart recognition when stopped
         setInterval(function(e){
-            if(!!this.recognizing === false) {
+            if(!!this.starting === false && !!this.recognizing === false) {
                 $("#rec-state").text("再認識開始")
                 this.recognition.start();
             }
@@ -87,8 +101,6 @@
         }
 
         if(!!this._timer) {
-            ctx.fillStyle = "rgba(255,255,255, 0.8)"
-            ctx.fillRect(10, h - 60, w - 20, 35)
 
             this.tmp = str || this.tmp;
 
@@ -106,11 +118,30 @@
                 soundEffects.command('ban');
                 return;
             }
+            // 枠を表示する
             var recognized = this.tmp.indexOf("...") === 0;
-            ctx.font = "bold 30px 'ＭＳ ゴシック'"; 
-            ctx.textAlign = "center"
+            ctx.font = "bold 30px 'Lucida Grande','Hiragino Maru Gothic ProN', 'ヒラギノ丸ゴ ProN W3','Meiryo','メイリオ',sans-serif";
+
+            // 文字幅を取得する。
+            var margin = 50;
+            var mres = ctx.measureText(this.tmp);
+            if(mres.width > (w - (margin << 1))) {
+                var sw_ = w - (margin << 1);
+            } else {
+                var sw_ = mres.width;
+            }
+
+
+            ctx.fillStyle = "rgb(255,255,255)"
+            // ctx.fillRect(10, h - 60, w - 20, 35)
+            ctx.fillRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+
+            ctx.lineWidth = 3;
+            ctx.strokeRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+
+            ctx.textAlign = "left"
             ctx.fillStyle = recognized ? "#666" : "#000"
-            ctx.fillText(this.tmp, w / 2, h-30, w-20);
+            ctx.fillText(this.tmp, (w-sw_)>>1, h-30, sw_);
         }
     }
     global.MySpeech = MySpeech;

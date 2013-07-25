@@ -4,7 +4,7 @@
 	var faceWidth = 0;
 
 	// 以下をtrueにすると、faceTrackingが行われるようになる。
-	if(true){
+	if(false){
 	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
 	  htracker.init($("video")[0], $("canvas")[0]);
 	  htracker.start();

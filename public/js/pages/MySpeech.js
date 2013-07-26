@@ -118,6 +118,8 @@
             case 'パン': case '3':
             case '1': case 'man':
             case 'ワーナー': case 'バーナー':
+            case 'まー': case '麻雀':
+            case 'マナー': case '麻雀':
                 MyPow.pow(ctx);
                 soundEffects.command('ban');
                 return;

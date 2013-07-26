@@ -8,12 +8,12 @@
         return img;
     }
     
-    var goImg = loadImage('/img/go.png');
-    var dotImg = loadImage('/img/dot.png');
-    var donImg = loadImage('/img/don.png');
-    var banImg = loadImage('/img/ban.png');
-    var zawaImg = loadImage('/img/zawa.png');
-    var shi_nImg = loadImage('/img/shi-n.png');
+    var goImg = loadImage('img/go.png');
+    var dotImg = loadImage('img/dot.png');
+    var donImg = loadImage('img/don.png');
+    var banImg = loadImage('img/ban.png');
+    var zawaImg = loadImage('img/zawa.png');
+    var shi_nImg = loadImage('img/shi-n.png');
     
     var commandImgs = {
         don: {

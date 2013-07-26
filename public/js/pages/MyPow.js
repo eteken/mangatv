@@ -62,16 +62,19 @@
 
 	if(true){
 		faceWidth = 80;
-		var l_ = (640  - faceWidth) / 2
-			, t_ = (480 - faceWidth) / 2
-			, w_ = faceWidth
-			, h_ = faceWidth;
-		$("#face,#face-orig").css({
-			'left' : l_,
-			'top' : t_,
-			'width' : w_,
-			'height' : h_
-		})
+		setTimeout(function(){
+			var l_ = (640  - faceWidth) / 2 + $("#main-canvas").position().left
+				, t_ = (480 - faceWidth) / 2
+				, w_ = faceWidth
+				, h_ = faceWidth;
+			$("#face,#face-orig").css({
+				'left' : l_,
+				'top' : t_,
+				'width' : w_,
+				'height' : h_
+			})
+		}, 3000)
+		
 	}
 	function showPow(ctx){
 		var faceWidth_;

@@ -90,13 +90,18 @@ var myEffect;
         // 3の割り算を高速化
         // 下の定数だと誤差はでるが、まぁ許せるレベル
         // 参考 http://www.azillionmonkeys.com/qed/adiv.html
+
         var CONST = 11, C_SHIFT = 5;
-        for(var y = 1; y < height-1; y++){
-            for(var x = 1; x < width-1; x++){
+        var CONST_0_3 = 53, SHIFT_0_3 = 4;
+        var CONST_0_59 = 27, SHIFT_0_59 = 4;
+        var CONST_0_11 = 145, SHIFT_0_11 = 4;
+
+        var x, y, gra, dx, dy, dx_, dy_;
+        for(y = 1; y < height-1; y++){
+            for(x = 1; x < width-1; x++){
                 c = y * width + x;
 
                 i = c << 2;
-
 
                 tmp = (c - width) << 2;
                 a0 = ((dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) * CONST >> C_SHIFT) & 0xc0;
@@ -117,7 +122,7 @@ var myEffect;
                     gray = (gray * this.blight);
                 }
                 //階調化
-                var gra;
+                gra;
                 if(gray < 85) {
                     gra = 0;
                 } else if(gray < 170) {
@@ -128,10 +133,10 @@ var myEffect;
 
                 //　スクリーントーン化 
                 if( gra === 1 ) {
-                    var dx = (i % (width << 2)) >> 2;
-                    var dy = (i / (width << 2))|0;
-                    var dx_ = dx & 0x03;
-                    var dy_ = dy & 0x03;
+                    dx = (i % (width << 2)) >> 2;
+                    dy = (i / (width << 2))|0;
+                    dx_ = dx & 0x03;
+                    dy_ = dy & 0x03;
 
                     if( dx_ === 0 && dy_ === 0) {
                         gra = 0;

@@ -107,19 +107,23 @@
             switch (this.tmp) {
             case 'ドン': case 'ドーン':
             case 'どん': case 'どーん':
+            case 'トン': case 'ローン':
+            case 'none': case '本':
+            case 'tone': case 'zone':
                 MyPow.pow(ctx);
                 soundEffects.command('don');
                 return;
             case 'バン': case 'バーン':
             case 'ばん': case 'ばーん':
             case 'パン': case '3':
+            case '1': case 'man':
             case 'ワーナー': case 'バーナー':
                 MyPow.pow(ctx);
                 soundEffects.command('ban');
                 return;
             }
             // 枠を表示する
-            var recognized = this.tmp.indexOf("...") === 0;
+            var candidate = this.tmp.indexOf("...") === 0;
             ctx.font = "bold 30px 'Lucida Grande','Hiragino Maru Gothic ProN', 'ヒラギノ丸ゴ ProN W3','Meiryo','メイリオ',sans-serif";
 
             // 文字幅を取得する。
@@ -132,15 +136,16 @@
             }
 
 
-            ctx.fillStyle = "rgb(255,255,255)"
-            // ctx.fillRect(10, h - 60, w - 20, 35)
-            ctx.fillRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+            if(!!candidate === false  ) {
+                ctx.fillStyle = "rgb(255,255,255)"
+                ctx.fillRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
 
-            ctx.lineWidth = 3;
-            ctx.strokeRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+                ctx.lineWidth = 3;
+                ctx.strokeRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+            }
 
             ctx.textAlign = "left"
-            ctx.fillStyle = recognized ? "#666" : "#000"
+            ctx.fillStyle = candidate ? "#666" : "#000"
             ctx.fillText(this.tmp, (w-sw_)>>1, h-30, sw_);
         }
     }

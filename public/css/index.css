@@ -32,3 +32,17 @@ body {
 
 @-webkit-keyframes slider{0%{left:100%;opacity:1}90%{left:10%;opacity:1}100%{left:0;opacity:0}}video{display:none}form{position:absolute;top:0;right:0;background:#fff;border:1px solid black;text-align:right;padding:3px}
 
+
+form {
+	position:absolute;
+	top:0; left:0;
+	width: 50px;
+	height: 20px;
+	overflow: hidden;
+	color: white;
+}
+form:hover{
+	color: black;
+	width: 200px;
+	height: auto;
+};

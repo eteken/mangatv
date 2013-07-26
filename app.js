@@ -10,6 +10,8 @@ var express = require('express')
   , path = require('path')
   , fs = require('fs')
 
+var app = express();
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3002);
   app.set('views', __dirname + '/views');

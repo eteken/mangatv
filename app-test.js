@@ -7,11 +7,20 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
+  , https = require('https')
   , path = require('path')
   , fs = require('fs')
 
+var app = express()
+  ,options = {
+    key: fs.readFileSync('keys/spdy-key.pem'),
+    cert: fs.readFileSync('keys/spdy-cert.pem'),
+    ca: fs.readFileSync('keys/spdy-csr.pem')
+  };
+
+
 app.configure(function(){
-  app.set('port', process.env.PORT || 3002);
+  app.set('port', process.env.PORT || 4443);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
@@ -29,6 +38,10 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(options, app).listen(app.get('port'), function(){
+https.createServer(options, app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
+});
+
+http.createServer(app).listen(3002, function(){
+  console.log("Express server listening on port " + 3002);
 });

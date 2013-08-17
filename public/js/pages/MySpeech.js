@@ -60,11 +60,11 @@
                     }
                 } else {
                     var candidate = event.results[i][0].transcript
-                    if(candidate.length > 10) {
+                    if(candidate.length > 15) {
                         this._push(candidate)
                         this.recognition.stop();
                     } else {
-                        this._push("...")
+                        this._push(".."+candidate)
                         $("#rec-state").text("認識中："+candidate)
                     }
                 }
@@ -125,30 +125,36 @@
                 return;
             }
             // 枠を表示する
-            var candidate = this.tmp.indexOf("...") === 0;
-            ctx.font = "bold 30px 'Lucida Grande','Hiragino Maru Gothic ProN', 'ヒラギノ丸ゴ ProN W3','Meiryo','メイリオ',sans-serif";
+            var candidate = this.tmp.indexOf("..") === 0;
+            var color = candidate ? "#666" : "#000"
+            var size = "30px"
+            var text = candidate ? this.tmp.slice(2) : this.tmp;
 
-            // 文字幅を取得する。
-            var margin = 50;
-            var mres = ctx.measureText(this.tmp);
-            if(mres.width > (w - (margin << 1))) {
-                var sw_ = w - (margin << 1);
-            } else {
-                var sw_ = mres.width;
+            if(!MyPow.showSpeech(text, color)) {
+                ctx.font = "bold "+size+" 'Lucida Grande','Hiragino Maru Gothic ProN', 'ヒラギノ丸ゴ ProN W3','Meiryo','メイリオ',sans-serif";
+
+                // 文字幅を取得する。
+                var margin = 50;
+                var mres = ctx.measureText(text);
+                if(mres.width > (w - (margin << 1))) {
+                    var sw_ = w - (margin << 1);
+                } else {
+                    var sw_ = mres.width;
+                }
+
+                if(!candidate) {
+                    ctx.fillStyle = "rgb(255,255,255)"
+                    ctx.fillRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
+                }
+
+                ctx.textAlign = "left"
+                ctx.fillStyle = color
+        
+                 ctx.fillText(text, (w-sw_)>>1, h-30, sw_);
             }
-
-
-            if(!!candidate === false  ) {
-                ctx.fillStyle = "rgb(255,255,255)"
-                ctx.fillRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
-
-                ctx.lineWidth = 3;
-                ctx.strokeRect( (( w - sw_ ) >> 1) - (margin >> 1) , h - 70, sw_ + margin, 55)
-            }
-
-            ctx.textAlign = "left"
-            ctx.fillStyle = candidate ? "#666" : "#000"
-            ctx.fillText(this.tmp, (w-sw_)>>1, h-30, sw_);
         }
     }
     global.MySpeech = MySpeech;

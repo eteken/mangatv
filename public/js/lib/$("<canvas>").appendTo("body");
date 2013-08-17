@@ -1,0 +1,23 @@
+// $("<canvas>").appendTo("body");
+var canvas = $("canvas")[0]
+	, ctx = canvas.getContext('2d')
+
+canvas.width = 640, canvas.height = 480;
+
+for(var i = 0, l = ent.length; i < l; i++) {
+	var imgURL = ent[i];
+
+	var img = new Image();
+	img.src = imgURL;
+
+	img.onload = function(e){
+		console.log(this.src)
+		ctx.drawImage(this, 0, 0);
+		var dataURL = canvas.toDataURL();
+		console.log(dataURL);
+
+		var name_ = this.src.split("/").slice(-1)[0]
+
+		$.post('http://localhost:3000/upload', {name:name_, data: dataURL})
+	}
+}

@@ -2,23 +2,28 @@
 	//顔認識の開始
 	var scale;
 	var faceWidth = 0;
+	var res;
+	var canvas = $("canvas")[0]
+	var ctx = canvas.getContext('2d')
 
 	// 以下をtrueにすると、faceTrackingが行われるようになる。
-	if(false){
-	var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
-	  htracker.init($("video")[0], $("canvas")[0]);
-	  htracker.start();
+	var faceDetection = location.hash == "#face"
+	if(faceDetection){
+		var htracker = new headtrackr.Tracker({calcAngles : true, ui : false, headPosition : false});
+		htracker.init($("video")[0], $("canvas")[0]);
+		htracker.start();
 
 
-	  document.addEventListener("facetrackingEvent", function( event ) {
-	    // clear canvas
-	    // once we have stable tracking, draw rectangle
-	    if (event.detection == "CS") {
-			scale = calc_scale();
-	    	showFaceSquare(event);
-	      //showPow();
-	    }
-	});
+		document.addEventListener("facetrackingEvent", function( event ) {
+		    // clear canvas
+		    // once we have stable tracking, draw rectangle
+		    if (event.detection == "CS") {
+				scale = calc_scale();
+		    	// showFaceSquare(event);
+		    	res = event;
+		      //showPow();
+		    }
+		});
 	}
 
 	function calc_scale(){
@@ -34,24 +39,89 @@
 	}
 
 	var faceWidth;
-	function showFaceSquare(event){
-	    var offset = $("canvas").position().left;
 
-	    faceWidth = event.width;
+	function showFaceSquare(){
+		if(res){
+			faceWidth = res.width;
+			ctx.beginPath();
+			ctx.strokeStyle = "rgb(255, 255, 0)"
+			ctx.strokeRect(res.x - (res.width >> 1), res.y - (res.height >> 1), res.width, res.height)
+			ctx.stroke();
 
-	  $("#face").css('left', (offset + scale*(event.x-event.width/2))+'px')
-	  $("#face").css('top', scale*(event.y-event.height/2)+'px')
-	  $("#face").css('width', scale*event.width+'px')
-	  $("#face").css('height', scale*event.height+'px')
-	  $("#face").css('-webkit-transform', 'rotate('+ (event.angle-1.57)*(57.3) + 'deg)')
-
-	  $("#face-orig").css('left', (event.x - event.width / 2)+'px')
-	  $("#face-orig").css('top', (event.y - event.height / 2)+'px')
-	  $("#face-orig").css('width', event.width+'px')
-	  $("#face-orig").css('height', event.height+'px')
-	  $("#face-orig").css('-webkit-transform', 'rotate('+ (event.angle-1.57)*(57.3) + 'deg)')
-
+			var l_ = res.x - (res.width >> 1) + ($("#full").css("left").slice(0, -2)|0) + "px"
+				, t_ = res.y - (res.height >> 1) + "px"
+				, w_ = res.width + "px"
+				, h_ = res.width + "px";
+			$("#face").css({
+				'left' : l_,
+				'top' : t_,
+				'width' : w_,
+				'height' : h_
+			})
+		}
 	}
+
+	function showSpeech(str, color){
+		if(!!str && res){
+			var color_ = color || "#000"
+			ctx.beginPath();
+			ctx.strokeStyle = color_
+
+
+
+			var margin_ = 50
+				, dw_ = (parseInt(str.length / 10) + 1)
+				, w_ = (dw_ * 40) + 10
+				, h_ = (dw_ === 1 ? (str.length * 40 + 20) : 350);
+
+			var x_, y_;
+
+			ctx.stroke();
+			ctx.fillStyle = "rgb(255, 255, 255)"
+
+			if(res.x < (canvas.width >> 1)) {
+				x_ = res.x + (res.width >> 1) + margin_
+			} else {
+				x_ = res.x - (res.width >> 1) - w_ - margin_
+			}
+			y_ = res.y - (res.width >> 1) + margin_;
+			y_ = y_ < margin_ ? margin_ : y_;
+			y_ = (canvas.height - y_) < 360 ? canvas.height - 360 : y_;
+
+			if(true) {
+				ctx.fillRect(x_ , y_, w_, h_)
+				ctx.strokeRect(x_ , y_, w_, h_)
+				ctx.stroke();
+			}
+
+			ctx.beginPath();
+			ctx.fillStyle = color_
+			ctx.textBaseLin = "top"
+			ctx.font = "bold 30px 'Lucida Grande','Hiragino Maru Gothic ProN', '@ヒラギノ丸ゴ ProN W3','@Meiryo','@メイリオ',sans-serif";
+
+			str = str.replace(/[ーー-]/g, "｜");
+
+			for(var i = 0; str[i]; i++){
+				var m_ = ctx.measureText(str[i])
+				var dw_ = (i / 10) | 0;
+
+				var x__ = x_ + w_ - 10 - m_.width - (dw_ * 40)
+					,y__ = 40 + y_ + (30 * (i % 10))
+
+				if(str[i].match(/[。．、]/g)) {
+					x__ += 20
+					y__ -= 18 
+				}
+
+				ctx.fillText(str[i], x__, y__ );
+			}
+			ctx.stroke();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 	var powtimer_ = null;
 
@@ -60,28 +130,22 @@
 	    $('#full').css("background", "none").empty();
 	}
 
-	if(true){
-		faceWidth = 80;
-		setTimeout(function(){
-			var l_ = (640  - faceWidth) / 2 + $("#main-canvas").position().left
-				, t_ = (480 - faceWidth) / 2
-				, w_ = faceWidth
-				, h_ = faceWidth;
-			$("#face,#face-orig").css({
+
+	function showPow(){
+		if(!!res){
+			var faceWidth_ = res.width >> 1;
+		} else {
+			var faceWidth_ = 100
+			var l_ = (canvas.width >> 1) - 50 + ($("#full").css("left").slice(0, -2)|0) + "px"
+				, t_ = (canvas.height >> 1) - 50 + "px"
+				, w_ = "100px"
+				, h_ = "100px";
+			$("#face").css({
 				'left' : l_,
 				'top' : t_,
 				'width' : w_,
 				'height' : h_
 			})
-		}, 3000)
-		
-	}
-	function showPow(ctx){
-		var faceWidth_;
-		if(!!ctx) {
-			var faceWidth_ = faceWidth;
-		} else {
-			var faceWidth_ = scale * faceWidth;
 		}
 
 		if(!!ctx === false) {
@@ -95,7 +159,7 @@
 		    probability: 0.25,
 		    radius :faceWidth_,
 		    originY:90,
-		    originEl: (!!ctx ? '#face-orig' : '#face'),
+		    originEl: ('#face'),
 		    bgColorStart: 'rgba(255, 255, 255, 0)',
 		    rayColorStart: 'rgba(0, 0, 0, 1)',
 		    bgColorEnd: 'rgba(0, 0, 0, 0)',
@@ -113,4 +177,6 @@
 
 	global.MyPow = {};
 	MyPow.pow = showPow;
+	MyPow.showFaceSquare = showFaceSquare;
+	MyPow.showSpeech = showSpeech;
 }(window));

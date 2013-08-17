@@ -11,11 +11,13 @@ var $v_ = $("video")
 , recognizedText
 , saveCanvasNeeded;
 
-canvasSaver.init(function(error, result) {
-    if (error) {
-        console.error(error);
-    }
-});
+if(window.canvasSaver){
+    canvasSaver.init(function(error, result) {
+        if (error) {
+            console.error(error);
+        }
+    });
+}
 /*
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
@@ -50,11 +52,12 @@ $("#saveCanvas").on("change", function(e) {
     saveCanvasNeeded = this.checked;
 });
 
-
-mySpeech.onRecognized = function(result) {
-    console.log(result);
-    recognizedText = result;
-};
+if(window.mySpeech){
+    mySpeech.onRecognized = function(result) {
+        console.log(result);
+        recognizedText = result;
+    };
+}
 
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
@@ -103,6 +106,8 @@ $v_.on("playing", function(){
         }
         recognizedText = null;
         soundEffects.draw();
+        MyPow.showFaceSquare();
+        // MyPow.showSpeech("テストテストaaaaaaaaaaaaaaaa")
         requestAnimationFrame(doToon)
 //        stats.update();
     }

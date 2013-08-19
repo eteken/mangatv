@@ -10,7 +10,7 @@ var myEffect;
         // Definition of constant.
         option = option || {};
         this.TONE = 86; // 階調
-        this.blight = localStorage.blight || option.blight || 2.3; // 明るさ
+        this.blight = localStorage.blight || option.blight || 2; // 明るさ
         this.dark = localStorage.dark || option.dark || 57; // 暗さの境界値
 
         this.ctx = ctx; // canvas context object
@@ -30,7 +30,8 @@ var myEffect;
         num = num > 255 ? 255 : num;
         this.blight = num;
         localStorage.blight = this.blight;
-        BLIGHT = num|0;
+        BLIGHT = parseInt(num);
+        // BLIGHT = num == 0 ? 0 : parseInt(Math.LOG2E * Math.log(num));
     }
 
     myEffect.prototype.changeDark = function(num){
@@ -39,7 +40,7 @@ var myEffect;
         num = num > 255 ? 255 : num;
         this.dark = num;
         localStorage.dark = this.dark;
-        DARK = num|0;
+        DARK = parseInt(num);
     }
 
     myEffect.prototype.detect_edge = function(img, width, height){
@@ -95,11 +96,8 @@ var myEffect;
         var FILTER = 0xff80;
 
         var x, y, gra, dx_, dy_;
-        for(y = height-1; y--;){
-            if( !y) continue;
-
-            for(x = width-1; x--;){
-                if( !x) continue;
+        for(var y = 1; y < height-1; y++){
+            for(var x = 1; x < width-1; x++){
 
                 c = y * width + x;
 
@@ -124,10 +122,10 @@ var myEffect;
                 } else {
                     // 明瞭化処理
                     if(gray > DARK) {
-                    gray = (gray * BLIGHT);
+                        gray = gray * BLIGHT;
                     }
                     // 階調化
-                    if(!(gray &0xff00) ) {
+                    if( !(gray & 0xff00) ) {
                         gra = 0;
                     } else if(!(gray & 0xfe00) ) {
                         gra = 1;
@@ -136,7 +134,7 @@ var myEffect;
                     }
 
                     //　スクリーントーン化 
-                    if( gra === 1 ) {
+                    if( gra == 1 ) {
                         dx_ = (x & 0x03)
                         dy_ = (y & 0x03)
 

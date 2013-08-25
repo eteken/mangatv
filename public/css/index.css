@@ -30,7 +30,7 @@ body {
 	font-size: 0.5em;
 }
 
-@-webkit-keyframes slider{0%{left:100%;opacity:1}90%{left:10%;opacity:1}100%{left:0;opacity:0}}video{display:none}form{position:absolute;top:0;right:0;background:#fff;border:1px solid black;text-align:right;padding:3px}
+@-webkit-keyframes slider{0%{left:100%;opacity:1}90%{left:10%;opacity:1}100%{left:0;opacity:1}}video{display:none}form{position:absolute;top:0;right:0;background:#fff;border:1px solid black;text-align:right;padding:3px}
 
 
 form {

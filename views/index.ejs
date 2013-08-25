@@ -22,8 +22,14 @@
     </div>
 
     <form>
-      Dark: <input type="num" id="dark" min="0" max="255"><br>
-      Blight: <input type="num" id="blight" min="0" max="10"><br>
+      <p class="filter">
+        <label for="edge">エッジ抽出<input type="checkbox" id="edge" checked></label><br>
+        <label for="tone">トーン<input type="checkbox" id="tone" checked></label><br>
+      </p>
+      <p>
+        Dark: <input type="num" id="dark" min="0" max="255"><br>
+        Blight: <input type="num" id="blight" min="0" max="10"><br>
+      </p>
       <select id="command">
         <option value="don">ドンッ！</option>
       </select>

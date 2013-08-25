@@ -9,7 +9,9 @@ var $v_ = $("video")
 , soundEffects = new SoundEffects($c_[0])
 , canvasSaver = new CanvasSaver($c_[0])
 , recognizedText
-, saveCanvasNeeded;
+, saveCanvasNeeded
+, filter_options = {"edge": true, "tone": true}
+
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -31,11 +33,11 @@ navigator.webkitGetUserMedia({video: true, audio: false}, function(stream){
     $v_[0].play();
 });
 
-$("#dark").val(effect.dark)
+$("#dark").val(parseInt(effect.dark / 3))
     .on("change", function(ev){
         effect.changeDark($(this).val());
     })
-$("#blight").val(effect.blight)
+$("#blight").val(parseInt(effect.blight / 3))
     .on("change", function(ev){
         effect.changeBlight($(this).val());
     });
@@ -58,6 +60,12 @@ if(window.mySpeech){
         recognizedText = result;
     };
 }
+
+$("form p.filter input").on("change", function(e){
+    var id_ = $(this).attr("id")
+    console.log(id_, $(this)[0].checked)
+    filter_options[id_] = !!$(this)[0].checked
+})
 
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
@@ -85,7 +93,7 @@ $v_.on("playing", function(){
 
 
         var imgData = ctx_.getImageData(0, 0, w, h)
-        var toon = effect.toon(imgData, w, h);
+        var toon = effect.toon(imgData, w, h, filter_options);
 
         ctx_.putImageData(toon, 0, 0)
         mySpeech.appendCanvas(ctx_, w, h)

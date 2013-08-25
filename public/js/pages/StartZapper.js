@@ -36,7 +36,7 @@ $(function() {
                 alert('エラーが発生しました。' + err.message);
                 return;
             }
-            currentEvent = zapper.event({'id': '51ecca6063b71c4b39000012'});
+            currentEvent = zapper.event(); // {'id': '51ecca6063b71c4b39000012'});
             //currentEvent = zapper.event({'id': '5171e0a376194a8aaa000001'});
             
             currentEvent.subscribe('zap', function(zap) {

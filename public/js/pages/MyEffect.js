@@ -10,8 +10,11 @@ var myEffect;
         // Definition of constant.
         option = option || {};
         this.TONE = 86; // 階調
-        this.blight = localStorage.blight || option.blight || 2; // 明るさ
-        this.dark = localStorage.dark || option.dark || 57; // 暗さの境界値
+        this.blight = localStorage.blight || option.blight || 72; // 明るさ
+        this.dark = localStorage.dark || option.dark || 148; // 暗さの境界値
+
+        this.blight *= 3;
+        this.dark *= 3;
 
         this.ctx = ctx; // canvas context object
         this.img_toon;
@@ -20,26 +23,21 @@ var myEffect;
         this.height;
         this.data_quant = [];
 
-        BLIGHT = this.blight | 0;
-        DARK = this.dark | 0;
+        BLIGHT = parseInt(this.blight);
+        DARK = parseInt(this.dark);
     }
 
     myEffect.prototype.changeBlight = function(num){
-        num = parseInt(num);
-        num = num < 0 ? 0 : num;
-        num = num > 255 ? 255 : num;
-        this.blight = num;
-        localStorage.blight = this.blight;
+        num = parseInt(num) & 0xff;
+        localStorage.blight = num;
+        this.blight = parseInt(num);
         BLIGHT = parseInt(num);
-        // BLIGHT = num == 0 ? 0 : parseInt(Math.LOG2E * Math.log(num));
     }
 
     myEffect.prototype.changeDark = function(num){
-        num = parseInt(num);
-        num = num < 0 ? 0 : num;
-        num = num > 255 ? 255 : num;
-        this.dark = num;
-        localStorage.dark = this.dark;
+        num = parseInt(num) & 0xff;
+        localStorage.dark = num;
+        this.dark = parseInt(num);
         DARK = parseInt(num);
     }
 
@@ -83,7 +81,10 @@ var myEffect;
     // 12 - 13mseca // エッジ抽出を入れつつ、配列をやめたり、インライン展開したり
     // 9 - 10msec // 3の割り算を近似計算
     // 4 - 5 msecそもそも割り算とかいらなかったとか、プロパティ参照やめたとか
-    myEffect.prototype.toon = function(img, width, height){
+    myEffect.prototype.toon = function(img, width, height, options){
+        // edgeとtoneがfalseの時は何もしない
+        if(!options.edge && !options.tone) return img;
+
         var dotList = img.data;
 
         this.data_quant.length = 0;
@@ -93,7 +94,7 @@ var myEffect;
         var a0, a1, a2, a3;
         var c, i;
         var p;
-        var FILTER = 0xff80;
+        var FILTER = 0xff00;
 
         var x, y, gra, dx_, dy_;
         for(var y = 1; y < height-1; y++){
@@ -111,40 +112,46 @@ var myEffect;
                 a2 = (dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) & FILTER;
                 tmp = (c + width) << 2;
                 a3 = (dotList[tmp] + dotList[tmp+1] + dotList[tmp + 2]) & FILTER;
-                
+
                 gray = (dotList[i] + dotList[i+1] + dotList[i + 2] );
 
-                
+
                 if((a0 + a1 + a2+ a3) < ((gray & FILTER) << 2)) {
-                    img_toon.data[i] = 0;
-                    img_toon.data[i+1] = 0;
-                    img_toon.data[i+2] = 0;
-                } else {
-                    // 明瞭化処理
-                    if(gray > DARK) {
-                        gray = gray * BLIGHT;
+                    if(options.edge) {
+                        img_toon.data[i] = 0;
+                        img_toon.data[i+1] = 0;
+                        img_toon.data[i+2] = 0;
                     }
-                    // 階調化
-                    if( !(gray & 0xff00) ) {
-                        gra = 0;
-                    } else if(!(gray & 0xfe00) ) {
-                        gra = 1;
+                } else {
+                    if(options.tone) {
+                        // 明瞭化処理
+                        // if(gray > DARK) {
+                        //     gray = gray * BLIGHT;
+                        // }
+                        // 階調化
+                        if( gray < DARK ) {
+                            gra = 0;
+                        } else if( gray > BLIGHT ) {
+                            gra = 255;
+                        } else {
+                            gra = 1;
+                        }
+
+                        //　スクリーントーン化
+                        if( gra == 1 ) {
+                            dx_ = (x & 0x03)
+                            dy_ = (y & 0x03)
+
+
+                            if( (!dx_ && !dy_) || (dx_ == 2) && (dy_ == 2)){
+                                gra = 0;
+                            } else {
+                                gra = 255;
+                            }
+                        };
                     } else {
                         gra = 255;
                     }
-
-                    //　スクリーントーン化 
-                    if( gra == 1 ) {
-                        dx_ = (x & 0x03)
-                        dy_ = (y & 0x03)
-
-
-                        if( (!dx_ && !dy_) || (dx_ == 2) && (dy_ == 2)){
-                            gra = 0;
-                        } else {
-                            gra = 254;
-                        }
-                    };
 
 
                     //漫画生成

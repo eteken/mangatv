@@ -33,11 +33,11 @@ navigator.webkitGetUserMedia({video: true, audio: false}, function(stream){
     $v_[0].play();
 });
 
-$("#dark").val(parseInt(effect.dark / 3))
+$("#dark").val(parseInt(effect.dark))
     .on("change", function(ev){
         effect.changeDark($(this).val());
     })
-$("#bright").val(parseInt(effect.bright / 3))
+$("#bright").val(parseInt(effect.bright))
     .on("change", function(ev){
         effect.changeBright($(this).val());
     });

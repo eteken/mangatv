@@ -10,8 +10,8 @@ var myEffect;
         // Definition of constant.
         option = option || {};
         this.TONE = 86; // 階調
-        this.bright = parseInt(localStorage.bright) || option.bright || 72; // 明るさ
-        this.dark = parseInt(localStorage.dark) || option.dark || 148; // 暗さの境界値
+        this.bright = parseInt(localStorage.bright) || option.bright || 128; // 明るさ
+        this.dark = parseInt(localStorage.dark) || option.dark || 96; // 暗さの境界値
 
         // this.bright *= 3;
         // this.dark *= 3;

@@ -37,9 +37,9 @@ $("#dark").val(parseInt(effect.dark / 3))
     .on("change", function(ev){
         effect.changeDark($(this).val());
     })
-$("#blight").val(parseInt(effect.blight / 3))
+$("#bright").val(parseInt(effect.bright / 3))
     .on("change", function(ev){
-        effect.changeBlight($(this).val());
+        effect.changeBright($(this).val());
     });
 
 $("#pow").on("click", function(e){e.preventDefault();MyPow.pow();})
@@ -93,7 +93,11 @@ $v_.on("playing", function(){
 
 
         var imgData = ctx_.getImageData(0, 0, w, h)
-        var toon = effect.toon(imgData, w, h, filter_options);
+        if(location.hash == "#slow") {
+          var toon = effect.slowtoon(imgData, w, h, filter_options);
+        } else {
+          var toon = effect.toon(imgData, w, h, filter_options);
+        }
 
         ctx_.putImageData(toon, 0, 0)
         mySpeech.appendCanvas(ctx_, w, h)

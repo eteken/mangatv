@@ -1,7 +1,7 @@
 var myEffect;
 
 (function(){
-    var BLIGHT, DARK;
+    var BRIGHT, DARK;
 
     myEffect = function(ctx, option){
         if(!!ctx === false) return false;
@@ -10,11 +10,11 @@ var myEffect;
         // Definition of constant.
         option = option || {};
         this.TONE = 86; // 階調
-        this.blight = localStorage.blight || option.blight || 72; // 明るさ
-        this.dark = localStorage.dark || option.dark || 148; // 暗さの境界値
+        this.bright = parseInt(localStorage.bright) || option.bright || 72; // 明るさ
+        this.dark = parseInt(localStorage.dark) || option.dark || 148; // 暗さの境界値
 
-        this.blight *= 3;
-        this.dark *= 3;
+        // this.bright *= 3;
+        // this.dark *= 3;
 
         this.ctx = ctx; // canvas context object
         this.img_toon;
@@ -23,15 +23,15 @@ var myEffect;
         this.height;
         this.data_quant = [];
 
-        BLIGHT = parseInt(this.blight);
+        BRIGHT = parseInt(this.bright);
         DARK = parseInt(this.dark);
     }
 
-    myEffect.prototype.changeBlight = function(num){
+    myEffect.prototype.changeBright = function(num){
         num = parseInt(num) & 0xff;
-        localStorage.blight = num;
-        this.blight = parseInt(num);
-        BLIGHT = parseInt(num);
+        localStorage.bright = num;
+        this.bright = parseInt(num);
+        BRIGHT = parseInt(num);
     }
 
     myEffect.prototype.changeDark = function(num){
@@ -124,14 +124,92 @@ var myEffect;
                     }
                 } else {
                     if(options.tone) {
-                        // 明瞭化処理
-                        // if(gray > DARK) {
-                        //     gray = gray * BLIGHT;
-                        // }
-                        // 階調化
                         if( gray < DARK ) {
                             gra = 0;
-                        } else if( gray > BLIGHT ) {
+                        } else if( gray > BRIGHT ) {
+                            gra = 255;
+                        } else {
+                            gra = 1;
+                        }
+
+                        //　スクリーントーン化
+                        if( gra == 1 ) {
+                            dx_ = (x & 0x03)
+                            dy_ = (y & 0x03)
+
+
+                            if( (!dx_ && !dy_) || (dx_ == 2) && (dy_ == 2)){
+                                gra = 0;
+                            } else {
+                                gra = 255;
+                            }
+                        };
+                    } else {
+                        gra = 255;
+                    }
+
+
+                    //漫画生成
+                    img_toon.data[i] = gra;
+                    img_toon.data[i+1] = gra;
+                    img_toon.data[i+2] = gra;
+                }
+                img_toon.data[i+3] = 0xff; //img.data[i + 3];
+            }
+        }
+        return img_toon;
+    }
+
+    myEffect.prototype.slowtoon = function(img, width, height, options){
+        // edgeとtoneがfalseの時は何もしない
+        if(!options.edge && !options.tone) return img;
+
+        var sum = function(a, b, c) {
+          return (a + b + c);
+        }
+
+        var dotList = img.data;
+
+        this.data_quant.length = 0;
+        var gray, around;
+        var tmp;
+        var img_toon = this.img_toon
+        var a0, a1, a2, a3;
+        var c, i;
+        var p;
+        var FILTER = 0xff00;
+
+        var x, y, gra, dx_, dy_;
+        for(var y = 1; y < height-1; y++){
+            for(var x = 1; x < width-1; x++){
+
+                c = y * width + x;
+
+                i = c << 2;
+
+                tmp = (c - width) << 2;
+                a0 = sum(dotList[tmp], dotList[tmp+1], dotList[tmp + 2]) & FILTER;
+                tmp = (c - 1) << 2;
+                a1 = sum(dotList[tmp], dotList[tmp+1], dotList[tmp + 2]) & FILTER;
+                tmp = (c + 1) << 2;
+                a2 = sum(dotList[tmp], dotList[tmp+1], dotList[tmp + 2]) & FILTER;
+                tmp = (c + width) << 2;
+                a3 = sum(dotList[tmp], dotList[tmp+1], dotList[tmp + 2]) & FILTER;
+
+                gray = sum(dotList[i], dotList[i+1], dotList[i + 2] );
+
+
+                if((a0 + a1 + a2+ a3) < ((gray & FILTER) << 2)) {
+                    if(options.edge) {
+                        img_toon.data[i] = 0;
+                        img_toon.data[i+1] = 0;
+                        img_toon.data[i+2] = 0;
+                    }
+                } else {
+                    if(options.tone) {
+                        if( gray < this.dark ) {
+                            gra = 0;
+                        } else if( gray > this.bright ) {
                             gra = 255;
                         } else {
                             gra = 1;

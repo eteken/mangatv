@@ -7,11 +7,12 @@
     <link rel=stylesheet href="css/index.css">
   </head>
   <body class="_clearfix">
+      <!--
     <div id="notification-area">
       <ul id="notifications">
       </ul>
     </div>
-
+-->
     <div id="video-container">
       <video></video>
       <canvas id="main-canvas"></canvas>
@@ -37,15 +38,16 @@
       <div id="rec-log">音声認識：<span id="rec-state"></span></div>
       <input type="checkbox" id="saveCanvas"><label for="saveCanvas">スナップショットを撮る</label>
       <br><a href="http://zapper.kakkoii.tv/?eventId=51ecca6063b71c4b39000012" target="_blank">かっこいいねボタン</a>
+      <button id="captureMovieButton" type="button">動画の保存</button>
     </form>
 
-
+<!--
     <script src="https://app.html5experts.jp/kakkoiijs/lib/underscore-min.js"></script>
     <script src="https://app.html5experts.jp/kakkoiijs/lib/underscore.string.min.js"></script>
     <script src="https://app.html5experts.jp/kakkoiisocket.io/socket.io.js"></script>
     <script src="https://app.html5experts.jp/kakkoiijs/common.js"></script>
     <script src="https://app.html5experts.jp/kakkoiijs/zapper.js"></script>
-
+-->
     <!--
     <script src="http://zapper.kakkoii.tv/js/lib/underscore-min.js"></script>
     <script src="http://zapper.kakkoii.tv/js/lib/underscore.string.min.js"></script>
@@ -62,6 +64,10 @@
     -->
     <script src="js/lib/canvas-toBlob.min.js"></script>
     <script src="js/lib/pow.js"></script>
+    <script src="js/lib/b64.js"></script>
+    <script src="js/lib/LZWEncoder.js"></script>
+    <script src="js/lib/NeuQuant.js"></script>
+    <script src="js/lib/GIFEncoder.js"></script>
     <script src="js/pages/base.js"></script>
     <script src="js/pages/MyEffect.js"></script>
     <script src="js/pages/MySpeech.js"></script>
@@ -69,7 +75,9 @@
     <script src="js/pages/MyGogogo.js"></script>
     <script src="js/pages/SoundEffects.js"></script>
     <script src="js/pages/CanvasSaver.js"></script>
+      <!--
     <script src="js/pages/StartZapper.js"></script>
+-->
     <script src="js/pages/index.js"></script>
   </body>
 </html>

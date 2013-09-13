@@ -11,6 +11,8 @@ var $v_ = $("video")
 , recognizedText
 , saveCanvasNeeded
 , filter_options = {"edge": true, "tone": true}
+, captureAnim = false
+;
 
 
 if(window.canvasSaver){
@@ -67,6 +69,37 @@ $("form p.filter input").on("change", function(e){
     filter_options[id_] = !!$(this)[0].checked
 })
 
+var AnimGifRecorder = function() {
+    this.encoder = encoder = new GIFEncoder();
+    encoder.setRepeat(0);
+    encoder.setDelay(200);
+    this.recording = false;
+    this.canvas = canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 300;
+    encoder.setSize(canvas.width, canvas.height);
+    this.context = canvas.getContext('2d');
+};
+AnimGifRecorder.prototype = {
+    start: function() {
+        this.encoder.start();
+        this.recording = true;
+    },
+    save: function() {
+        var c = $c_[0];
+        this.context.drawImage(c, 0, 0, c.width, c.height, 0, 0, this.canvas.width, this.canvas.height);
+        this.encoder.addFrame(this.context);
+    },
+    finish: function() {
+        this.encoder.finish();
+        this.recording = false;
+    },
+    toDataURL: function() {
+        return 'data:image/gif;base64,'+encode64(this.encoder.stream().getData());
+    }
+};
+var animGifRecorder = new AnimGifRecorder();
+
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
     // canvas(不可視)のサイズをvideoサイズに変更
@@ -75,7 +108,7 @@ $v_.on("playing", function(){
 
     $c_[0].width = w;
     $c_[0].height = h;
-    $c_.css({"height": "100%"})
+//    $c_.css({"height": "100%"})
 
     var pos_ = $c_.position();
     var w_ = $c_.width();
@@ -110,6 +143,7 @@ $v_.on("playing", function(){
                 }
             });
         }
+
         if (soundCommand) {
             soundEffects.command(soundCommand);
             setTimeout(function() {
@@ -118,10 +152,29 @@ $v_.on("playing", function(){
         }
         recognizedText = null;
         soundEffects.draw();
+        
+        // GIFアニメの保存
+        if (captureAnim) {
+            if (!animGifRecorder.recording) {
+                animGifRecorder.start();
+                console.log('gif recording start');
+                setTimeout(function() {
+                    animGifRecorder.finish();
+                    console.log('gif recording end');
+                    location.href = animGifRecorder.toDataURL();
+                }, 10000);
+            }
+            animGifRecorder.save();
+        }
         MyPow.showFaceSquare();
         // MyPow.showSpeech("テストテストaaaaaaaaaaaaaaaa")
         requestAnimationFrame(doToon)
 //        stats.update();
     }
     doToon()
-})
+});
+
+$('#captureMovieButton').on('click', function(e) {
+    captureAnim = true;
+});
+

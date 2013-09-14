@@ -14,6 +14,7 @@ var $v_ = $("video")
 , captureAnim = false
 ;
 
+var REC_TIME = 10000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -99,6 +100,7 @@ AnimGifRecorder.prototype = {
     }
 };
 var animGifRecorder = new AnimGifRecorder();
+var animGifTimmer;
 
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
@@ -108,7 +110,7 @@ $v_.on("playing", function(){
 
     $c_[0].width = w;
     $c_[0].height = h;
-//    $c_.css({"height": "100%"})
+    $c_.css({"height": "100%"});
 
     var pos_ = $c_.position();
     var w_ = $c_.width();
@@ -158,11 +160,11 @@ $v_.on("playing", function(){
             if (!animGifRecorder.recording) {
                 animGifRecorder.start();
                 console.log('gif recording start');
-                setTimeout(function() {
+                animGifTimmer = setTimeout(function() {
                     animGifRecorder.finish();
                     console.log('gif recording end');
                     location.href = animGifRecorder.toDataURL();
-                }, 10000);
+                }, REC_TIME);
             }
             animGifRecorder.save();
         }
@@ -174,7 +176,26 @@ $v_.on("playing", function(){
     doToon()
 });
 
-$('#captureMovieButton').on('click', function(e) {
+function animGifFinish() {
+    captureAnim = false;
+    animGifRecorder.finish();
+    clearTimeout(animGifTimmer);
+}
+
+function animGifStart() {
     captureAnim = true;
+}
+
+$('#captureMovieButton').on('click', function(e) {
+    animGifStart();
+});
+
+$('#rec .rec-start').on('click', function() {
+    $('#rec').addClass('rec');
+    animGifStart();
+});
+$('#rec .rec-stop').on('click', function() {
+    $('#rec').removeClass('rec');
+    animGifFinish();
 });
 

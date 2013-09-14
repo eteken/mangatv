@@ -45,4 +45,22 @@ form:hover{
 	color: black;
 	width: 200px;
 	height: auto;
-};
+}
+
+#rec {
+	position: absolute;
+	top: 2%;
+	right: 13%;
+}
+
+.rec .rec-start {
+	display: none;	
+}
+.rec .rec-stop {
+	display: block;
+}
+.rec-stop {
+	display: none;
+}
+
+

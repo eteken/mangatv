@@ -45,3 +45,19 @@ https.createServer(options, app).listen(app.get('port'), function(){
 http.createServer(app).listen(3002, function(){
   console.log("Express server listening on port " + 3002);
 });
+
+app.post('/agif/:fileName', function(req, res) {
+//    var fileName = req.params.fileName;
+//    var image = req.body;
+    var imageFile = req.files.image;
+    var uploadedFilePath = imageFile.path;
+    var targetPath = '/upload/agif/' + imageFile.filename;
+    var saveFilePath = __dirname + '/public' + targetPath;
+    fs.rename(uploadedFilePath, saveFilePath, function (err) {
+        if (err) {
+            res.send(500, err);
+        } else {
+            res.send(200, targetPath);
+        }
+    });
+});

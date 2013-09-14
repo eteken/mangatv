@@ -17,7 +17,7 @@ var $v_ = $("video")
 , animGifTimer
 ;
 
-var REC_TIME = 10000;
+var REC_TIME = 2000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -148,7 +148,7 @@ $v_.on("playing", function(){
 function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
-    clearTimeout(animGifTimmer);
+    clearTimeout(animGifTimer);
     console.log('gif recording end');
 }
 
@@ -170,5 +170,23 @@ $('#rec .rec-stop').on('click', function() {
 });
 
 $('#tweetButton').on('click', function(e) {
-    
-});
+    var fileName = Date.now() + '.gif';
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '/agif/' + fileName, true);
+//    xhr.setRequestHeader('Content-Type', 'image/gif');
+//    xhr.setRequestHeader('Conten-Length', animGifBlob.size);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4)  {
+            return;
+        }
+        console.log('upload finished:' + xhr.responseText);
+    };
+    var formData = new FormData();
+    formData.append('image', animGifBlob, fileName);
+    xhr.send(formData);
+//    xhr.send(animGifBlob);
+    if (animGifBlob) {
+        URL.revokeObjectURL(animGifBlob);
+        animGifBlob = null;
+    }
+ });

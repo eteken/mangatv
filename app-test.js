@@ -43,7 +43,6 @@ app.configure('development', function(){
     }
     var movieDataContent = fs.readFileSync(movieDataFilePath, {encoding: 'utf8'});
     movieData = JSON.parse(movieDataContent);
-    
 })();
 
 app.get('/', routes.index);
@@ -60,10 +59,10 @@ http.createServer(app).listen(3002, function(){
 app.post('/upload/movies/:fileName', function(req, res) {
     var twitterId = req.body.twitterId;
     var movieId = req.body.movieId;
-    var targetPath = '/upload/movies/' + fileName;
     var movieFile = req.files.movie;
-    var uploadedFilePath = movieFile.path;
     var fileName = movieFile.filename;
+    var uploadedFilePath = movieFile.path;
+    var targetPath = '/upload/movies/' + fileName;
     var saveFilePath = getUploadedMoviePath(fileName);
     fs.rename(uploadedFilePath, saveFilePath, function (err) {
         if (err) {
@@ -72,6 +71,7 @@ app.post('/upload/movies/:fileName', function(req, res) {
             movieData.push({
                 movieId: movieId,
                 fileName: fileName,
+                path: targetPath,
                 twitterId: twitterId
             });
             storeMovieData(function(err) {
@@ -84,7 +84,14 @@ app.post('/upload/movies/:fileName', function(req, res) {
     });
 });
 
-app.get('/movies/:id')
+app.get('/movies', function(req, res) {
+    res.render('movies/index', { movieData: movieData });
+});
+
+app.get('/movies/:id', function(req, res) {
+    
+});
+
 function getUploadedMoviePath(fileName) {
     var targetPath = '/upload/movies/' + fileName;
     var saveFilePath = __dirname + '/public' + targetPath;

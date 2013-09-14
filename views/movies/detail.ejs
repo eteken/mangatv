@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>マンガテレビ</title>
+    <script src="js/lib/jquery-1.9.1.min.js"></script>
+    <link rel=stylesheet href="css/index.css">
+  </head>
+  <body class="_clearfix">
+      <!--
+    <div id="notification-area">
+      <ul id="notifications">
+      </ul>
+    </div>
+-->
+    <h1 class="logo"><img src="https://dl.dropboxusercontent.com/u/24915023/tmp/recbtn/mangatvlogo.svg" alt="マンガテレビ"></h1>
+    <div id="video-container">
+      <video></video>
+      <canvas id="main-canvas"></canvas>
+      <div id="slide"></div>
+      <div id="face"></div>
+      <div id="face-orig"></div>
+      <div id="full"></div>
+      <div id="rec">
+        <img src="https://dl.dropboxusercontent.com/u/24915023/tmp/recbtn/norec.svg" alt="Stop Recoding" class="rec-start">
+        <img src="https://dl.dropboxusercontent.com/u/24915023/tmp/recbtn/rec.svg" alt="Recoding" class="rec-stop">
+        <div id="rec-time">00.000</div>
+      </div>
+      <div id="rec-start-count">0</div>
+    </div>
+    <div id="rec-result">
+      <div>
+        <img id="anim-result">
+      </div>
+      <div>
+          @<input id="twitterId" required placeholder="Twitter ID">
+          <button id="tweetButton">ツイート</button>
+      </div>
+    </div>
+    <footer>
+      <img src="https://dl.dropboxusercontent.com/u/24915023/tmp/recbtn/html5jlogo.svg" alt="html5j" class="html5j-logo">
+    </footer>
+    <form>
+      <p class="filter">
+        <label for="edge">エッジ抽出<input type="checkbox" id="edge" checked></label><br>
+        <label for="tone">トーン<input type="checkbox" id="tone" checked></label><br>
+      </p>
+      <p>
+        Dark: <input type="range" id="dark" min="0" max="255"><br>
+        Bright: <input type="range" id="bright" min="0" max="255"><br>
+      </p>
+      <select id="command">
+        <option value="don">ドンッ！</option>
+      </select>
+      <button type="button" id="soundCommandButton">音声コマンド送信</button>
+      <div id="rec-log">音声認識：<span id="rec-state"></span></div>
+      <input type="checkbox" id="saveCanvas"><label for="saveCanvas">スナップショットを撮る</label>
+      <br><a href="http://zapper.kakkoii.tv/?eventId=51ecca6063b71c4b39000012" target="_blank">かっこいいねボタン</a>
+      <button id="captureMovieButton" type="button">動画の保存</button>
+    </form>
+
+<!--
+    <script src="https://app.html5experts.jp/kakkoiijs/lib/underscore-min.js"></script>
+    <script src="https://app.html5experts.jp/kakkoiijs/lib/underscore.string.min.js"></script>
+    <script src="https://app.html5experts.jp/kakkoiisocket.io/socket.io.js"></script>
+    <script src="https://app.html5experts.jp/kakkoiijs/common.js"></script>
+    <script src="https://app.html5experts.jp/kakkoiijs/zapper.js"></script>
+-->
+    <!--
+    <script src="http://zapper.kakkoii.tv/js/lib/underscore-min.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/lib/underscore.string.min.js"></script>
+    <script src="http://zapper.kakkoii.tv/socket.io/socket.io.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/common.js"></script>
+    <script src="http://zapper.kakkoii.tv/js/zapper.js"></script>
+  -->
+    <!--
+    <script src="js/lib/stats.js"></script>
+    -->
+      <!--
+    <script src="js/lib/headtrackr.js"></script>
+-->
+    <!--
+    <script src="js/lib/filer.min.js"></script>
+    -->
+    <script src="js/lib/canvas-toBlob.min.js"></script>
+    <script src="js/lib/pow.js"></script>
+    <script src="js/lib/b64.js"></script>
+    <script src="js/lib/LZWEncoder.js"></script>
+    <script src="js/lib/NeuQuant.js"></script>
+    <script src="js/lib/GIFEncoder.js"></script>
+    <script src="js/pages/base.js"></script>
+    <script src="js/pages/MyEffect.js"></script>
+    <script src="js/pages/MySpeech.js"></script>
+    <script src="js/pages/MyPow.js"></script>
+    <script src="js/pages/MyGogogo.js"></script>
+    <script src="js/pages/AnimGifRecorder.js"></script>
+    <script src="js/pages/SoundEffects.js"></script>
+    <script src="js/pages/CanvasSaver.js"></script>
+      <!--
+    <script src="js/pages/StartZapper.js"></script>
+-->
+    <script src="js/pages/index.js"></script>
+  </body>
+</html>

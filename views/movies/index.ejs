@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>動画一覧 | マンガテレビ</title>
+    <!--
+    <script src="js/lib/jquery-1.9.1.min.js"></script>
+    -->
+    <link rel=stylesheet href="css/movies/index.css">
+  </head>
+  <body>
+    <%
+      movieData.forEach(function(movie) {
+    %>
+      <img src="<%= movie.path %>">
+      <div><a href="https://twitter.com/<%= movie.twitterId %>">@<%= movie.twitterId %></a></div>
+    <%
+      });
+    %>
+  </body>
+</html>

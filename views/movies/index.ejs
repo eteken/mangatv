@@ -6,13 +6,15 @@
     <!--
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     -->
-    <link rel=stylesheet href="css/movies/index.css">
+    <link rel=stylesheet href="../css/movies/index.css">
   </head>
   <body>
+    <h1>本日の動画一覧</h1>
+    <div class="items">
     <%
       movieData.forEach(function(movie) {
     %>
-      <div>
+      <div class="item">
         <a href="/movies/<%= movie.id %>">
           <img src="<%= movie.path %>" class="movie">
         </a>
@@ -25,5 +27,6 @@
     <%
       });
     %>
+    </div>
   </body>
 </html>

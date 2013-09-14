@@ -6,7 +6,7 @@
     <!--
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     -->
-    <link rel=stylesheet href="../css/movies/index.css">
+    <link rel=stylesheet href="../css/movies/detail.css">
   </head>
   <body>
     <h1 class="name">
@@ -14,17 +14,17 @@
         <a href="https://twitter.com/<%= target.actor.twitterId %>">@<%= target.actor.twitterId %></a>
       <% } else { %>
         <%= target.actor.name %>
-      <% } %> さんの画像
+      <% } %> さんの動画
     </h1>
     <div class="container">
       <img src="<%= target.path %>" class="movie">
 
       <div class="links">
         <% if (prev) { %>
-          <a href="<%= prev.id %>" class="prev">&lt; <%= prev.actor.twitterId ? '@' + prev.actor.twitterId : prev.actor.name %>さんの画像</a>
+          <a href="<%= prev.id %>" class="prev">&lt; <%= prev.actor.twitterId ? '@' + prev.actor.twitterId : prev.actor.name %>さんの動画</a>
         <% } %>
         <% if (next) { %>
-          <a href="<%= next.id %>" class="next"><%= next.actor.twitterId ? '@' + next.actor.twitterId : next.actor.name %>さんの画像 &gt;</a>
+          <a href="<%= next.id %>" class="next"><%= next.actor.twitterId ? '@' + next.actor.twitterId : next.actor.name %>さんの動画 &gt;</a>
         <% } %>
       </div>
     </div>

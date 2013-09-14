@@ -2,33 +2,30 @@ body {
   text-align: center;
   padding: 2em;
 }
-.container {
-  width: 640px;
-  margin: 0 auto;
-}
-.movie {
-  width: 90%;
-  border: 12px solid #ccc;
-}
-
-a {
-  text-decoration: none;
-}
-.name {
+h1 {
   font-size: 3em;
 }
-.links {
-  margin-top: 2em;
-  position: relative;
+.items {
+  max-width: 1080px;
+  margin: 0 auto;
 }
-.prev .next {
-  display: inline-block;
+.item {
+  float: left;
+  width: 23%;
+  margin-left: 2%;
+  margin-bottom: 2em;
 }
-.prev {
-  position: absolute;
-  left: 0;
+.item:nth-child(4n+1) {
+  margin-left: 0;
 }
-.next {
-  position: absolute;
-  right: 0;
+.movie {
+  width: 100%;
+  border: 1px solid #ccc;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
 }

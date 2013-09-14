@@ -1,0 +1,33 @@
+body {
+  text-align: center;
+  padding: 2em;
+}
+.container {
+  width: 640px;
+  margin: 0 auto;
+}
+.movie {
+  width: 90%;
+  border: 12px solid #ccc;
+}
+a {
+  text-decoration: none;
+}
+.name {
+  font-size: 3em;
+}
+.links {
+  margin-top: 2em;
+  position: relative;
+}
+.prev .next {
+  display: inline-block;
+}
+.prev {
+  position: absolute;
+  left: 0;
+}
+.next {
+  position: absolute;
+  right: 0;
+}

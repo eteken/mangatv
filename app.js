@@ -45,12 +45,6 @@ var movieDataFilePath = './data/movie-data.json';
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-
-
-http.createServer(app).listen(3002, function(){
-  console.log("Express server listening on port " + 3002);
-});
-
 app.post('/upload/movies/:fileName', function(req, res) {
     var actorTwitterId = req.body.actorTwitterId;
     var actorName = req.body.actorName;

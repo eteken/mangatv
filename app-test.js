@@ -33,6 +33,9 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
+http.createServer(app).listen(3002, function(){
+  console.log("Express server listening on port " + 3002);
+});
 https.createServer(options, app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
@@ -54,9 +57,7 @@ app.get('/users', user.list);
 
 
 
-http.createServer(app).listen(3002, function(){
-  console.log("Express server listening on port " + 3002);
-});
+
 
 app.post('/upload/movies/:fileName', function(req, res) {
     var actorTwitterId = req.body.actorTwitterId;

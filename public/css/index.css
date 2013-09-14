@@ -45,14 +45,11 @@ form:hover{
 	color: black;
 	width: 200px;
 	height: auto;
-<<<<<<< HEAD
-};
+}
 
 #anim-result {
   width: 300px;
   height: 400px;
-}
-=======
 }
 
 #rec {
@@ -79,5 +76,3 @@ form:hover{
 .rec #rec-time {
 	display: block;
 }
-
->>>>>>> c17f0d5ec4cc2729e07dfa123b2a6511902a374b

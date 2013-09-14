@@ -131,9 +131,7 @@ $v_.on("playing", function(){
                 animGifRecorder.start();
                 console.log('gif recording start');
                 animGifTimer = setTimeout(function() {
-                    animGifRecorder.finish();
-                    console.log('gif recording end');
-//                    location.href = animGifRecorder.toDataURL();
+                    animGifFinish();
                     animGifBlob = animGifRecorder.toBlob();
                     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
                 }, REC_TIME);
@@ -151,6 +149,7 @@ function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
     clearTimeout(animGifTimmer);
+    console.log('gif recording end');
 }
 
 function animGifStart() {

@@ -148,7 +148,7 @@ $v_.on("playing", function(){
 function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
-    clearTimeout(animGifTimmer);
+    clearTimeout(animGifTimer);
     console.log('gif recording end');
 }
 
@@ -161,8 +161,26 @@ $('#captureMovieButton').on('click', function(e) {
 });
 
 $('#rec .rec-start').on('click', function() {
-    $('#rec').addClass('rec');
-    animGifStart();
+
+    var startCounter = $('#rec-start-count'),
+        timerCount = 3,
+        timer
+    startCounter.text(timerCount).show();
+    timer = setInterval(function(){
+        timerCount--;
+        if ( timerCount === 0 ) {
+            clearInterval(timer);
+            startCounter.hide();
+            $('#rec').addClass('rec');
+            animGifStart();
+        } else {
+            startCounter.text(timerCount);    
+        }
+    }, 1000);
+    
+
+
+
 });
 $('#rec .rec-stop').on('click', function() {
     $('#rec').removeClass('rec');

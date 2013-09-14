@@ -68,11 +68,31 @@ form:hover{
 	display: none;
 }
 #rec-time {
-	display: block;
+	display: none;
 	font-weight: bold;
 	font-size: 3em;
 }
-
 .rec #rec-time {
 	display: block;
+}
+
+#rec-start-count {
+	display: none;
+	position: absolute;
+	width: 600px;
+	height: 600px;
+	font-weight: bold;
+	font-size: 20em;
+	line-height: 1.8;
+	top: 50%;
+	left: 50%;
+	margin: -300px 0 0 -300px;
+	border-radius: 50%;
+	background: white;
+	border: 12px solid black;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	opacity: 0.6;
 }

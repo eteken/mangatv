@@ -16,7 +16,7 @@
     %>
       <div class="item">
         <a href="/movies/<%= movie.id %>">
-          <img src="<%= movie.path %>" class="movie">
+          <img src="<%= contextPath + movie.path %>" class="movie">
         </a>
         <% if (movie.actor.twitterId) { %>
           <a href="https://twitter.com/<%= movie.actor.twitterId %>">@<%= movie.actor.twitterId %></a>

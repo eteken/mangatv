@@ -10,6 +10,8 @@ var express = require('express')
   , https = require('https')
   , path = require('path')
   , fs = require('fs')
+  , CONTEXT_PATH = ''
+;
 
 var app = express()
   ,options = {
@@ -26,6 +28,10 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(function(req, res, next){
+      res.locals.contextPath = CONTEXT_PATH;
+      next();
+  });
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -40,9 +46,9 @@ https.createServer(options, app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-
+// ===ここから下をapp.jsにもコピー
 var movieData = [];
-var movieDataFilePath = './data/movie-data.json';
+var movieDataFilePath = __dirname + '/data/movie-data.json';
 
 (function() {
     if (!fs.existsSync(movieDataFilePath)) {
@@ -55,10 +61,6 @@ var movieDataFilePath = './data/movie-data.json';
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-
-
-
-
 app.post('/upload/movies/:fileName', function(req, res) {
     var actorTwitterId = req.body.actorTwitterId;
     var actorName = req.body.actorName;
@@ -67,10 +69,13 @@ app.post('/upload/movies/:fileName', function(req, res) {
     var movieFile = req.files.movie;
     var fileName = movieFile.filename;
     var uploadedFilePath = movieFile.path;
-    var targetPath = '/upload/movies/' + fileName;
-    var saveFilePath = getUploadedMoviePath(fileName);
+    var targetPath = getMoviePath(fileName);
+    var saveFilePath = getMovieLocation(fileName);
+  console.log('uploadedFilePath:' + uploadedFilePath + ' saveFilePath:' + saveFilePath);
     fs.rename(uploadedFilePath, saveFilePath, function (err) {
         if (err) {
+            console.log('uploadedFilePath:' + uploadedFilePath + ' saveFilePath:' + saveFilePath);
+            console.error(err);
             res.send(500, err);
         } else {
             movieData.push({
@@ -124,10 +129,13 @@ app.get('/movies/:id', function(req, res) {
     });
 });
 
-function getUploadedMoviePath(fileName) {
-    var targetPath = '/upload/movies/' + fileName;
+function getMovieLocation(fileName) {
+    var targetPath = getMoviePath(fileName);
     var saveFilePath = __dirname + '/public' + targetPath;
     return saveFilePath;
+}
+function getMoviePath(fileName) {
+    return CONTEXT_PATH + '/upload/movies/' + fileName;
 }
 function storeMovieData(callback) {
     fs.writeFile(movieDataFilePath, JSON.stringify(movieData), function(err) {

@@ -15,9 +15,10 @@ var $v_ = $("video")
 , animGifRecorder = new AnimGifRecorder($c_[0])
 , animGifBlob
 , animGifTimer
+, contextPath = $('#contextPath').val()
 ;
 
-var REC_TIME = 10000;
+var REC_TIME = 2000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -263,7 +264,7 @@ $('#tweetButton').on('click', function(e) {
     var movieId = String(Date.now());
     var fileName = movieId + '.gif';
     var xhr = new XMLHttpRequest();
-    xhr.open('post', '/upload/movies/' + fileName, true);
+    xhr.open('post', contextPath + '/upload/movies/' + fileName, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4)  {
             return;
@@ -280,7 +281,7 @@ $('#tweetButton').on('click', function(e) {
     formData.append('movieId', movieId);
     formData.append('movie', animGifBlob, fileName);
     xhr.send(formData);
-    var movieUrl = location.protocol + '//' + location.host + '/movies/' + movieId;
+    var movieUrl = location.protocol + '//' + location.host + contextPath + '/movies/' + movieId;
     var windowUrl = 'https://twitter.com/intent/tweet?hashtags=html5j&via=html5j&text=';
     var actorId = twitterId ? '.@' + twitterId : handleName;
     var tweet = encodeURIComponent(actorId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);

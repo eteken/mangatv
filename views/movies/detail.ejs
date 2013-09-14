@@ -10,7 +10,7 @@
   </head>
   <body>
     <div>
-      <img src="<%= target.path %>">
+      <img src="<%= contextPath + target.path %>">
       <div>
         <% if (target.actor.twitterId) { %>
           <a href="https://twitter.com/<%= target.actor.twitterId %>">@<%= target.actor.twitterId %></a></div>

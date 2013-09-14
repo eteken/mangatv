@@ -1,7 +1,14 @@
-var AnimGifRecorder = function(origCanvas) {
+var AnimGifRecorder = function(origCanvas, options) {
+    var opts = {
+        delay: 200
+    };
+    for (var i in options) {
+        opts[i] = options[i];
+    }
     this.encoder = encoder = new GIFEncoder();
     encoder.setRepeat(0);
-    encoder.setDelay(200);
+    encoder.setDelay(opts.delay);
+    this.interval = Math.floor(opts.delay / 2);
     this.recording = false;
     this.origCanvas = origCanvas;
     this.canvas = canvas = document.createElement('canvas');
@@ -12,13 +19,18 @@ var AnimGifRecorder = function(origCanvas) {
 };
 AnimGifRecorder.prototype = {
     start: function() {
+        delete this.prevSave;
         this.encoder.start();
         this.recording = true;
     },
     save: function() {
-        var c = this.origCanvas;
-        this.context.drawImage(c, 0, 0, c.width, c.height, 0, 0, this.canvas.width, this.canvas.height);
-        this.encoder.addFrame(this.context);
+        var now = Date.now();
+        if (!this.prevSave || now - this.prevSave > this.interval) {
+            var c = this.origCanvas;
+            this.context.drawImage(c, 0, 0, c.width, c.height, 0, 0, this.canvas.width, this.canvas.height);
+            this.encoder.addFrame(this.context);
+            this.prevSave = now;
+        }
     },
     finish: function() {
         this.encoder.finish();

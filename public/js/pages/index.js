@@ -17,7 +17,7 @@ var $v_ = $("video")
 , animGifTimer
 ;
 
-var REC_TIME = 2000;
+var REC_TIME = 10000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {

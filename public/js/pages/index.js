@@ -13,6 +13,8 @@ var $v_ = $("video")
 , filter_options = {"edge": true, "tone": true}
 , captureAnim = false
 , animGifRecorder = new AnimGifRecorder($c_[0])
+, animGifBlob
+, animGifTimer
 ;
 
 var REC_TIME = 10000;
@@ -70,42 +72,6 @@ $("form p.filter input").on("change", function(e){
     console.log(id_, $(this)[0].checked)
     filter_options[id_] = !!$(this)[0].checked
 })
-
-<<<<<<< HEAD
-var AnimGifRecorder = function() {
-    this.encoder = encoder = new GIFEncoder();
-    encoder.setRepeat(0);
-    encoder.setDelay(200);
-    this.recording = false;
-    this.canvas = canvas = document.createElement('canvas');
-    canvas.width = 400;
-    canvas.height = 300;
-    encoder.setSize(canvas.width, canvas.height);
-    this.context = canvas.getContext('2d');
-};
-AnimGifRecorder.prototype = {
-    start: function() {
-        this.encoder.start();
-        this.recording = true;
-    },
-    save: function() {
-        var c = $c_[0];
-        this.context.drawImage(c, 0, 0, c.width, c.height, 0, 0, this.canvas.width, this.canvas.height);
-        this.encoder.addFrame(this.context);
-    },
-    finish: function() {
-        this.encoder.finish();
-        this.recording = false;
-    },
-    toDataURL: function() {
-        return 'data:image/gif;base64,'+encode64(this.encoder.stream().getData());
-    }
-};
-var animGifRecorder = new AnimGifRecorder();
-var animGifTimmer;
-
-=======
->>>>>>> 922a06197ab725ed6138c61e40ae251c0427d4b8
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
     // canvas(不可視)のサイズをvideoサイズに変更
@@ -164,12 +130,10 @@ $v_.on("playing", function(){
             if (!animGifRecorder.recording) {
                 animGifRecorder.start();
                 console.log('gif recording start');
-                animGifTimmer = setTimeout(function() {
-                    animGifRecorder.finish();
-                    console.log('gif recording end');
-//                    location.href = animGifRecorder.toDataURL();
-                    var blob = animGifRecorder.toBlob();
-                    location.href = URL.createObjectURL(blob);
+                animGifTimer = setTimeout(function() {
+                    animGifFinish();
+                    animGifBlob = animGifRecorder.toBlob();
+                    document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
                 }, REC_TIME);
             }
             animGifRecorder.save();
@@ -185,6 +149,7 @@ function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
     clearTimeout(animGifTimmer);
+    console.log('gif recording end');
 }
 
 function animGifStart() {
@@ -204,3 +169,6 @@ $('#rec .rec-stop').on('click', function() {
     animGifFinish();
 });
 
+$('#tweetButton').on('click', function(e) {
+    
+});

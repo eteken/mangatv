@@ -29,6 +29,7 @@ AnimGifRecorder.prototype = {
         return new Uint8Array(binArray).buffer;
     },
     toBlob: function() {
+        var buf = this.toArrayBuffer();
         return new Blob([buf], {type: 'image/gif'});
     },
     toDataURL: function() {

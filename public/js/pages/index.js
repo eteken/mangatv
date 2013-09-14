@@ -240,6 +240,7 @@ $('#tweetButton').on('click', function(e) {
         alert('Twitter IDが入力されていません。');
         return;
     }
+    var handleName = $('#handleName').val();
     var movieId = String(Date.now());
     var fileName = movieId + '.gif';
     var xhr = new XMLHttpRequest();
@@ -251,11 +252,16 @@ $('#tweetButton').on('click', function(e) {
         console.log('upload finished:' + xhr.responseText);
     };
     var formData = new FormData();
-    formData.append('twitterId', twitterId);
+    if (twitterId) {
+        formData.append('actorTwitterId', twitterId);
+    }
+    if (handleName) {
+        formData.append('actorName', handleName);
+    }
     formData.append('movieId', movieId);
     formData.append('movie', animGifBlob, fileName);
     xhr.send(formData);
-    var movieUrl = location.protocol + '//' + location.host + '/upload/movies/' + fileName;
+    var movieUrl = location.protocol + '//' + location.host + '/movies/' + movieId;
     var windowUrl = 'https://twitter.com/intent/tweet?hashtags=html5j&via=html5j&text=';
     var tweet = encodeURIComponent('.@' + twitterId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);
     windowUrl += tweet;

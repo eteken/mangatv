@@ -57,7 +57,9 @@ http.createServer(app).listen(3002, function(){
 });
 
 app.post('/upload/movies/:fileName', function(req, res) {
-    var twitterId = req.body.twitterId;
+    var actorTwitterId = req.body.actorTwitterId;
+    var actorName = req.body.actorName;
+    console.log(req.body);
     var movieId = req.body.movieId;
     var movieFile = req.files.movie;
     var fileName = movieFile.filename;
@@ -69,10 +71,13 @@ app.post('/upload/movies/:fileName', function(req, res) {
             res.send(500, err);
         } else {
             movieData.push({
-                movieId: movieId,
+                id: movieId,
                 fileName: fileName,
                 path: targetPath,
-                twitterId: twitterId
+                actor: {
+                    twitterId: actorTwitterId,
+                    name: actorName
+                }
             });
             storeMovieData(function(err) {
                 if (err) {
@@ -89,7 +94,31 @@ app.get('/movies', function(req, res) {
 });
 
 app.get('/movies/:id', function(req, res) {
-    
+    var movieId = req.params.id;
+    var targetIdx = -1;
+    var max = movieData.length;
+    for (var i = 0; i < max; i++) {
+        if (movieData[i].id == movieId) {
+            targetIdx = i;
+            break;
+        }
+    }
+    if (targetIdx === -1) {
+        return res.send(404);
+    }
+    var prev = null, next = null;
+    var target = movieData[targetIdx];
+    if (targetIdx > 0) {
+        prev = movieData[targetIdx - 1];
+    }
+    if (targetIdx < max - 1) {
+        next = movieData[targetIdx + 1];
+    }
+    res.render('movies/detail', {
+        target: target,
+        prev: prev,
+        next: next
+    });
 });
 
 function getUploadedMoviePath(fileName) {

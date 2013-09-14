@@ -12,8 +12,16 @@
     <%
       movieData.forEach(function(movie) {
     %>
-      <img src="<%= movie.path %>">
-      <div><a href="https://twitter.com/<%= movie.twitterId %>">@<%= movie.twitterId %></a></div>
+      <div>
+        <a href="/movies/<%= movie.id %>">
+          <img src="<%= movie.path %>" class="movie">
+        </a>
+        <% if (movie.actor.twitterId) { %>
+          <a href="https://twitter.com/<%= movie.actor.twitterId %>">@<%= movie.actor.twitterId %></a>
+        <% } else { %>
+          <%= movie.actor.name %>
+        <% } %>
+      </div>
     <%
       });
     %>

@@ -149,6 +149,7 @@ function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
     clearTimeout(animGifTimer);
+    $('#rec').removeClass('rec');
     console.log('gif recording end');
 }
 
@@ -156,13 +157,56 @@ function animGifStart() {
     captureAnim = true;
 }
 
+var recCounterTimer;
+function startRecCounter(ms) {
+    var recConter = $('#rec-time');
+    var last = new Date().getTime() + ms;
+
+    recCounterTimer = setInterval(function(){
+        var now = new Date().getTime();
+        var rest = last - now;
+        if( rest > 0 ){
+            var min=Math.floor(rest/1000/60);
+            var sec=Math.floor(rest/1000)-min*60;
+            var mil=rest-Math.floor(rest/1000)*1000;
+            str = sec;
+            // チューニングしてintervalも1000から10に戻す
+            // str = ("00"+sec.toString(10)).slice(-2) + "."
+            //     + ("000"+mil.toString(10)).slice(-3).slice(0,3);
+        } else {
+            str = '00.000';
+            clearInterval(recCounterTimer);
+        }
+        recConter.text(str);
+    }, 1000);
+}
+
+function stopRecCounter(ms) {
+
+}
+
 $('#captureMovieButton').on('click', function(e) {
     animGifStart();
 });
 
 $('#rec .rec-start').on('click', function() {
-    $('#rec').addClass('rec');
-    animGifStart();
+
+    var startCounter = $('#rec-start-count'),
+        timerCount = 3,
+        timer;
+    startCounter.text(timerCount).show();
+    timer = setInterval(function(){
+        timerCount--;
+        if ( timerCount === 0 ) {
+            clearInterval(timer);
+            startCounter.hide();
+            $('#rec').addClass('rec');
+            animGifStart();
+            startRecCounter(REC_TIME);
+        } else {
+            startCounter.text(timerCount);
+        }
+    }, 1000);
 });
 $('#rec .rec-stop').on('click', function() {
     $('#rec').removeClass('rec');

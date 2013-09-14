@@ -6,23 +6,27 @@
     <!--
     <script src="js/lib/jquery-1.9.1.min.js"></script>
     -->
-    <link rel=stylesheet href="css/movies/index.css">
+    <link rel=stylesheet href="../css/movies/index.css">
   </head>
   <body>
-    <div>
-      <img src="<%= target.path %>">
-      <div>
-        <% if (target.actor.twitterId) { %>
-          <a href="https://twitter.com/<%= target.actor.twitterId %>">@<%= target.actor.twitterId %></a></div>
-        <% } else { %>
-          <%= target.actor.name %>
+    <h1 class="name">
+      <% if (target.actor.twitterId) { %>
+        <a href="https://twitter.com/<%= target.actor.twitterId %>">@<%= target.actor.twitterId %></a>
+      <% } else { %>
+        <%= target.actor.name %>
+      <% } %> さんの画像
+    </h1>
+    <div class="container">
+      <img src="<%= target.path %>" class="movie">
+
+      <div class="links">
+        <% if (prev) { %>
+          <a href="<%= prev.id %>" class="prev">&lt; <%= prev.actor.twitterId ? '@' + prev.actor.twitterId : prev.actor.name %>さんの画像</a>
         <% } %>
+        <% if (next) { %>
+          <a href="<%= next.id %>" class="next"><%= next.actor.twitterId ? '@' + next.actor.twitterId : next.actor.name %>さんの画像 &gt;</a>
+        <% } %>
+      </div>
     </div>
-    <% if (prev) { %>
-      <a href="<%= prev.id %>">&lt;<%= prev.actor.twitterId ? '@' + prev.actor.twitterId : prev.actor.name %>さんの動画</a>
-    <% } %>
-    <% if (next) { %>
-      <a href="<%= next.id %>"><%= next.actor.twitterId ? '@' + next.actor.twitterId : next.actor.name %>さんの動画&gt;</a>
-    <% } %>
   </body>
 </html>

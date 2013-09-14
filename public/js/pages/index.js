@@ -120,9 +120,11 @@ $v_.on("playing", function(){
 
         if (soundCommand) {
             soundEffects.command(soundCommand);
+            
             // 「流れる系」のエフェクトは、一回コマンドを呼び出して終わり
             if (soundCommand === 'zawa' || soundCommand === 'go') {
                 soundCommand = null;
+                
             // そうでない場合は、3秒間表示する
             } else {
                 setTimeout(function() {

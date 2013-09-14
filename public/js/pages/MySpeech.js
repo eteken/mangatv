@@ -97,7 +97,7 @@
             if(!!this._timer) clearTimeout(this._timer);
             this._timer = setTimeout(function(e){
                 this._timer = null;
-            }.bind(this), 3000)
+            }.bind(this), 3000);
         }
 
         if(!!this._timer) {
@@ -122,6 +122,12 @@
             case 'マナー': case '麻雀':
                 MyPow.pow(ctx);
                 soundEffects.command('ban');
+                return;
+            case 'ざわ ざわ':
+                soundEffects.command('zawa');
+                return;
+            case '555': case 'ごごご': case 'ゴゴゴ': case '高校 高校': case '午後5':
+                soundEffects.command('go');
                 return;
             }
             // 枠を表示する

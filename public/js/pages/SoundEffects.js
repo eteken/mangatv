@@ -19,12 +19,21 @@
         don: {
             img: donImg,
             x: 200,
-            y: 20
+            y: -20
         },
         ban: {
             img: banImg,
             x: 200,
-            y: 200
+            y: -20
+        },
+        shi_n: {
+            img: shi_nImg
+        },
+        zawa: {
+            img: zawaImg
+        },
+        go: {
+            img: goImg
         }
     };
     
@@ -118,50 +127,24 @@
                         if (x < -elem.img.naturalWidth) {
                             imgList.shift();
                             i--;
+                            n--;
                             continue;
                         }
                         elem.x = x;
                     } else {
+                        // 画面外に消えてしまった要素は配列から削除
+                        if (elem.x < -elem.img.naturalWidth) {
+                            imgList.shift();
+                            i--;
+                            n--;
+                            continue;
+                        }
                         elem.x -= move;
                     }
                     elem.y = Y;
                 }
-                
-                /*
-                var startElem = null;
-                while (true) {
-                    if (imgList.length === 0) {
-                        return;
-                    }
-                    var startElem = imgList[0];
-                    var startTime = startElem.timestamp;
-                    var distance = (now - startElem.timestamp) / 10;
-                    var x = self.canvas.width - distance;
-                    // 画面外に描画する画像はリストの先頭から削除する
-                    if (x < -startElem.img.naturalWidth) {
-                        imgList.shift();
-                    } else {
-                        startElem.x = x;
-                        startElem.y = Y;
-                        break;
-                    }
-                }
-                var prevElem = startElem;
-                for (var i = 1, n = imgList.length; i < n; i++) {
-                    var elem = imgList[i];
-                    var distance = (now - elem.timestamp) / 10;
-                    var prevElemX = prevElem.x + prevElem.img.naturalWidth;
-                    // 前に表示した要素に重ならないように出す
-                    if (prevElemX > distance) {
-                        elem.x = prevElemX;
-                    } else {
-                        elem.x = distance;
-                    }
-                    elem.y = Y;
-                    prevElem = elem;
-                }
-                */
             })();
+            //console.log(imgList.length);
             
             for (var i = 0; i < imgList.length; i++) {
                 var elem = imgList[i];
@@ -169,16 +152,37 @@
                 var x = elem.x;
                 var y = elem.y;
                 self.ctx.drawImage(img, x, y, img.naturalWidth, img.naturalHeight);
-                console.log('x=' + x + ',y=' + y + ',w=' + img.naturalWidth + ',h=' + img.naturalHeight);
             }
             self.prevDraw = now;
         },
         command: function(cmd) {
+            console.log(cmd);
             var commandImgInfo = commandImgs[cmd];
             var commandImg = commandImgInfo.img;
+            switch (cmd) {
+                case 'ban':
+                case 'don':
+                case 'shi_n':
+                    // 横真ん中に出す
+                    var x = (this.canvas.width - commandImg.naturalWidth) / 2;
+                    // 下から
+                    var y = this.canvas.height - commandImg.naturalHeight - 20;
+                    console.log(y);
+                    this.ctx.drawImage(commandImg, x, y, commandImg.naturalWidth, commandImg.naturalHeight);
+                    break;
+                case 'zawa':
 
-            var x = (this.canvas.width - commandImg.naturalWidth) / 2;
-            this.ctx.drawImage(commandImg, x, commandImgInfo.y, commandImg.naturalWidth, commandImg.naturalHeight);
+                    for (var i = 0; i < 2; i++) {
+                        this._imgList.unshift({img: commandImg});
+                    }
+                    break;
+                case 'go':
+                    this._imgList.unshift({img: dotImg});
+                    for (var i = 0; i < 3; i++) {
+                        this._imgList.unshift({img: commandImg});
+                    }
+                    break;
+            }
         }
     };
     global.SoundEffects = SoundEffects;

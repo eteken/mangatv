@@ -133,24 +133,20 @@ $v_.on("playing", function(){
                 recEndTime = new Date().getTime() + REC_TIME;
                 animGifRecorder.start();
                 console.log('gif recording start');
-                // animGifTimer = setTimeout(function() {
-                //     animGifFinish();
-                //     animGifBlob = animGifRecorder.toBlob();
-                //     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
-                // }, REC_TIME);
+                animGifRecorder.save();
             } else {
                 var now = new Date().getTime();
                 var rest = recEndTime - now;
 
                 if ( rest > 0 ) {
                     recConter.text(timerFormat(rest));
+                    animGifRecorder.save();
                 } else {
                     animGifFinish();
                     animGifBlob = animGifRecorder.toBlob();
                     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
                 }
             }
-            animGifRecorder.save();
         }
         MyPow.showFaceSquare();
         requestAnimationFrame(doToon)

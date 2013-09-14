@@ -95,6 +95,7 @@ form:hover{
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 	opacity: 0.6;
+	z-index: 999;
 }
 
 .logo {
@@ -142,6 +143,27 @@ form:hover{
 #rec-result {
 	display: none;
 }
+#rec-result span {
+	line-height: 1.33;
+}
+
+input[type=text] {
+	display: inline-block;
+	width: 10em;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555555;
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
 
 #tweetButton, #close-btn {
 	padding: 10px 16px;
@@ -174,10 +196,11 @@ form:hover{
 	color: #333333;
 	background-color: #ffffff;
 	border-color: #cccccc;
+	margin-left: 1em;
 }
 .inputs {
-	margin: 2em 0;
+	margin: 2em 0 3em;
 }
 #rec-result hr {
-	margin: 1em 0;
+	margin: 2em 0;
 }

@@ -48,11 +48,6 @@ form:hover{
 	height: auto;
 }
 
-#anim-result {
-  width: 300px;
-  height: 400px;
-}
-
 #rec {
 	position: absolute;
 	top: 2%;
@@ -112,4 +107,73 @@ form:hover{
 	position: absolute;
 	bottom: 2%;
 	right: 13%;
+}
+
+#rec-result {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 800px;
+	height: 800px;
+	border: 1px solid gray;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: -400px 0 0 -400px;
+	z-index: 999;
+	background: white;
+	padding: 4em;
+	text-align: center;
+}
+#rec-result p, #rec-result span, #rec-result input, #rec-result button {
+	font-size: 2em;
+}
+#anim-result {
+	border: 12px solid #ccc;
+}
+#handleName {
+	margin-left: 1em;
+}
+#rec-result {
+	display: none;
+}
+
+#tweetButton, #close-btn {
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.33;
+	border-radius: 6px;
+	color: #ffffff;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.428571429;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	min-width: 6em;
+}
+#close-btn {
+	color: #333333;
+	background-color: #ffffff;
+	border-color: #cccccc;
+}
+.inputs {
+	margin: 2em 0;
+}
+#rec-result hr {
+	margin: 1em 0;
 }

@@ -144,7 +144,7 @@ $v_.on("playing", function(){
                 } else {
                     animGifFinish();
                     animGifBlob = animGifRecorder.toBlob();
-                    document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
+                    showPopup(URL.createObjectURL(animGifBlob));
                 }
             }
         }
@@ -154,6 +154,13 @@ $v_.on("playing", function(){
     }
     doToon()
 });
+
+function showPopup(imgURL) {
+    $('#twitterId').val('');
+    $('#handleName').val('');
+    $('#anim-result').attr('src', imgURL);
+    $('#rec-result').fadeIn();
+}
 
 function animGifFinish() {
     captureAnim = false;
@@ -232,6 +239,10 @@ $('#rec .rec-start').on('click', function() {
 $('#rec .rec-stop').on('click', function() {
     $('body').removeClass('rec');
     animGifFinish();
+});
+
+$('#close-btn').on('click', function(){
+    $('#rec-result').fadeOut();
 });
 
 $('#tweetButton').on('click', function(e) {

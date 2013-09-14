@@ -229,6 +229,7 @@ $('#tweetButton').on('click', function(e) {
         console.log('upload finished:' + xhr.responseText);
     };
     var formData = new FormData();
+    formData.append('twitterId', twitterId);
     formData.append('image', animGifBlob, fileName);
     xhr.send(formData);
     var imageUrl = location.protocol + '//' + location.host + '/upload/agif/' + fileName;

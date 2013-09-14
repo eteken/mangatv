@@ -13,6 +13,7 @@ var $v_ = $("video")
 , filter_options = {"edge": true, "tone": true}
 , captureAnim = false
 , animGifRecorder = new AnimGifRecorder($c_[0])
+, animGifBlob
 ;
 
 
@@ -132,8 +133,10 @@ $v_.on("playing", function(){
                     animGifRecorder.finish();
                     console.log('gif recording end');
 //                    location.href = animGifRecorder.toDataURL();
-                    var blob = animGifRecorder.toBlob();
-                    location.href = URL.createObjectURL(blob);
+                    animGifBlob = animGifRecorder.toBlob();
+                    document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
+                    
+//                    location.href = URL.createObjectURL(blob);
                 }, 2000);
             }
             animGifRecorder.save();
@@ -149,3 +152,6 @@ $('#captureMovieButton').on('click', function(e) {
     captureAnim = true;
 });
 
+$('#tweetButton').on('click', function(e) {
+    
+});

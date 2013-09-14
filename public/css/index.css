@@ -46,3 +46,8 @@ form:hover{
 	width: 200px;
 	height: auto;
 };
+
+#anim-result {
+  width: 300px;
+  height: 400px;
+}

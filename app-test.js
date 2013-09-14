@@ -18,8 +18,8 @@ var app = express()
     ca: fs.readFileSync('keys/spdy-csr.pem')
   };
 
-var imageData = [];
-var imageDataFilePath = './data/image-data.json';
+var movieData = [];
+var movieDataFilePath = './data/movie-data.json';
 
 app.configure(function(){
   app.set('port', process.env.PORT || 4443);
@@ -38,11 +38,11 @@ app.configure('development', function(){
 });
 
 (function() {
-    if (!fs.existsSync(imageDataFilePath)) {
+    if (!fs.existsSync(movieDataFilePath)) {
         return;
     }
-    var imgDataContent = fs.readFileSync(imageDataFilePath, {encoding: 'utf8'});
-    imageData = JSON.parse(imgDataContent);
+    var movieDataContent = fs.readFileSync(movieDataFilePath, {encoding: 'utf8'});
+    movieData = JSON.parse(movieDataContent);
     
 })();
 
@@ -57,22 +57,24 @@ http.createServer(app).listen(3002, function(){
   console.log("Express server listening on port " + 3002);
 });
 
-app.post('/agif/:fileName', function(req, res) {
-    var twitterId = req.body.twitterId;    
-    var targetPath = '/upload/agif/' + fileName;
-    var imageFile = req.files.image;
-    var uploadedFilePath = imageFile.path;
-    var fileName = imageFile.filename;
-    var saveFilePath = getUploadedImagePath(fileName);
+app.post('/upload/movies/:fileName', function(req, res) {
+    var twitterId = req.body.twitterId;
+    var movieId = req.body.movieId;
+    var targetPath = '/upload/movies/' + fileName;
+    var movieFile = req.files.movie;
+    var uploadedFilePath = movieFile.path;
+    var fileName = movieFile.filename;
+    var saveFilePath = getUploadedMoviePath(fileName);
     fs.rename(uploadedFilePath, saveFilePath, function (err) {
         if (err) {
             res.send(500, err);
         } else {
-            imageData.push({
+            movieData.push({
+                movieId: movieId,
                 fileName: fileName,
                 twitterId: twitterId
             });
-            storeImageData(function(err) {
+            storeMovieData(function(err) {
                 if (err) {
                     console.error(err);
                 }
@@ -82,13 +84,14 @@ app.post('/agif/:fileName', function(req, res) {
     });
 });
 
-function getUploadedImagePath(fileName) {
-    var targetPath = '/upload/agif/' + fileName;
+app.get('/movies/:id')
+function getUploadedMoviePath(fileName) {
+    var targetPath = '/upload/movies/' + fileName;
     var saveFilePath = __dirname + '/public' + targetPath;
     return saveFilePath;
 }
-function storeImageData(callback) {
-    fs.writeFile(imageDataFilePath, JSON.stringify(imageData), function(err) {
+function storeMovieData(callback) {
+    fs.writeFile(movieDataFilePath, JSON.stringify(movieData), function(err) {
         callback(err);
     });
 }

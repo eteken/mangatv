@@ -17,7 +17,7 @@ var $v_ = $("video")
 , animGifTimer
 ;
 
-var REC_TIME = 10000;
+var REC_TIME = 2000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -244,9 +244,10 @@ $('#tweetButton').on('click', function(e) {
         alert('Twitter IDが入力されていません。');
         return;
     }
-    var fileName = Date.now() + '.gif';
+    var movieId = String(Date.now());
+    var fileName = movieId + '.gif';
     var xhr = new XMLHttpRequest();
-    xhr.open('post', '/agif/' + fileName, true);
+    xhr.open('post', '/upload/movies/' + fileName, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4)  {
             return;
@@ -255,11 +256,12 @@ $('#tweetButton').on('click', function(e) {
     };
     var formData = new FormData();
     formData.append('twitterId', twitterId);
-    formData.append('image', animGifBlob, fileName);
+    formData.append('movieId', movieId);
+    formData.append('movie', animGifBlob, fileName);
     xhr.send(formData);
-    var imageUrl = location.protocol + '//' + location.host + '/upload/agif/' + fileName;
+    var movieUrl = location.protocol + '//' + location.host + '/upload/movies/' + fileName;
     var windowUrl = 'https://twitter.com/intent/tweet?hashtags=html5j&via=html5j&text=';
-    var tweet = encodeURIComponent('@' + twitterId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + imageUrl);
+    var tweet = encodeURIComponent('.@' + twitterId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);
     windowUrl += tweet;
     window.open(windowUrl, 'twitter', 'width=480,height=360');
     if (animGifBlob) {

@@ -211,6 +211,10 @@ var recCounterTimer;
 //     }, 1000);
 // }
 
+$('.command-buttons button').on('click', function(){
+    soundCommand = $(this).attr('data-command');
+});
+
 function stopRecCounter() {
     clearInterval(recCounterTimer);
 }

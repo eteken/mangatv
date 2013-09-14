@@ -123,12 +123,12 @@
                 MyPow.pow(ctx);
                 soundEffects.command('ban');
                 return;
-            case 'ざわ ざわ':
-                soundEffects.command('zawa');
-                return;
-            case '555': case 'ごごご': case 'ゴゴゴ': case '高校 高校': case '午後5':
-                soundEffects.command('go');
-                return;
+            // case 'ざわ ざわ':
+            //     soundEffects.command('zawa');
+            //     return;
+            // case '555': case 'ごごご': case 'ゴゴゴ': case '高校 高校': case '午後5':
+            //     soundEffects.command('go');
+            //     return;
             }
             // 枠を表示する
             var candidate = this.tmp.indexOf("..") === 0;

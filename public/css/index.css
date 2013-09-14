@@ -165,7 +165,7 @@ input[type=text] {
 	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
-#tweetButton, #close-btn {
+#tweetButton, #close-btn, .button {
 	padding: 10px 16px;
 	font-size: 18px;
 	line-height: 1.33;
@@ -203,4 +203,14 @@ input[type=text] {
 }
 #rec-result hr {
 	margin: 2em 0;
+}
+.command-buttons {
+	position: absolute;
+	left: 0;
+	bottom: 2%;
+}
+.command-buttons button {
+	display: block;
+	margin: 0.5em;
+	font-size: 2em;
 }

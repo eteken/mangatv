@@ -18,9 +18,6 @@ var app = express()
     ca: fs.readFileSync('keys/spdy-csr.pem')
   };
 
-var movieData = [];
-var movieDataFilePath = './data/movie-data.json';
-
 app.configure(function(){
   app.set('port', process.env.PORT || 4443);
   app.set('views', __dirname + '/views');
@@ -36,6 +33,13 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
+https.createServer(options, app).listen(app.get('port'), function(){
+  console.log("Express server listening on port " + app.get('port'));
+});
+
+
+var movieData = [];
+var movieDataFilePath = './data/movie-data.json';
 
 (function() {
     if (!fs.existsSync(movieDataFilePath)) {
@@ -48,9 +52,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-https.createServer(options, app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+
 
 http.createServer(app).listen(3002, function(){
   console.log("Express server listening on port " + 3002);

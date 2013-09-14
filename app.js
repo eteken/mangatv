@@ -27,13 +27,12 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
-(function() {
-    if (!fs.existsSync(movieDataFilePath)) {
-        return;
-    }
-    var movieDataContent = fs.readFileSync(movieDataFilePath, {encoding: 'utf8'});
-    movieData = JSON.parse(movieDataContent);
-})();
+http.createServer(app).listen(3002, function(){
+  console.log("Express server listening on port " + 3002);
+});
+
+var movieData = [];
+var movieDataFilePath = './data/movie-data.json';
 
 (function() {
     if (!fs.existsSync(movieDataFilePath)) {
@@ -45,6 +44,8 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+
 
 http.createServer(app).listen(3002, function(){
   console.log("Express server listening on port " + 3002);

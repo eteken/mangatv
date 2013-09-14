@@ -125,7 +125,7 @@ function getMovieLocation(fileName) {
     return saveFilePath;
 }
 function getMoviePath(fileName) {
-    return CONTEXT_PATH + '/upload/movies/' + fileName;
+    return '/upload/movies/' + fileName;
 }
 function storeMovieData(callback) {
     fs.writeFile(movieDataFilePath, JSON.stringify(movieData), function(err) {

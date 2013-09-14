@@ -46,9 +46,9 @@ https.createServer(options, app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-
+// ===ここから下をapp.jsにもコピー
 var movieData = [];
-var movieDataFilePath = './data/movie-data.json';
+var movieDataFilePath = __dirname + '/data/movie-data.json';
 
 (function() {
     if (!fs.existsSync(movieDataFilePath)) {
@@ -71,8 +71,11 @@ app.post('/upload/movies/:fileName', function(req, res) {
     var uploadedFilePath = movieFile.path;
     var targetPath = getMoviePath(fileName);
     var saveFilePath = getMovieLocation(fileName);
+  console.log('uploadedFilePath:' + uploadedFilePath + ' saveFilePath:' + saveFilePath);
     fs.rename(uploadedFilePath, saveFilePath, function (err) {
         if (err) {
+            console.log('uploadedFilePath:' + uploadedFilePath + ' saveFilePath:' + saveFilePath);
+            console.error(err);
             res.send(500, err);
         } else {
             movieData.push({

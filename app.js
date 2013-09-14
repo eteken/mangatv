@@ -35,6 +35,14 @@ app.configure('development', function(){
     movieData = JSON.parse(movieDataContent);
 })();
 
+(function() {
+    if (!fs.existsSync(movieDataFilePath)) {
+        return;
+    }
+    var movieDataContent = fs.readFileSync(movieDataFilePath, {encoding: 'utf8'});
+    movieData = JSON.parse(movieDataContent);
+})();
+
 app.get('/', routes.index);
 app.get('/users', user.list);
 

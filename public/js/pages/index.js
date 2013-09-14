@@ -14,8 +14,10 @@ var $v_ = $("video")
 , captureAnim = false
 , animGifRecorder = new AnimGifRecorder($c_[0])
 , animGifBlob
+, animGifTimer
 ;
 
+var REC_TIME = 10000;
 
 if(window.canvasSaver){
     canvasSaver.init(function(error, result) {
@@ -70,7 +72,6 @@ $("form p.filter input").on("change", function(e){
     console.log(id_, $(this)[0].checked)
     filter_options[id_] = !!$(this)[0].checked
 })
-
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
     // canvas(不可視)のサイズをvideoサイズに変更
@@ -79,7 +80,7 @@ $v_.on("playing", function(){
 
     $c_[0].width = w;
     $c_[0].height = h;
-//    $c_.css({"height": "100%"})
+    $c_.css({"height": "100%"});
 
     var pos_ = $c_.position();
     var w_ = $c_.width();
@@ -129,15 +130,13 @@ $v_.on("playing", function(){
             if (!animGifRecorder.recording) {
                 animGifRecorder.start();
                 console.log('gif recording start');
-                setTimeout(function() {
+                animGifTimer = setTimeout(function() {
                     animGifRecorder.finish();
                     console.log('gif recording end');
 //                    location.href = animGifRecorder.toDataURL();
                     animGifBlob = animGifRecorder.toBlob();
                     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
-                    
-//                    location.href = URL.createObjectURL(blob);
-                }, 2000);
+                }, REC_TIME);
             }
             animGifRecorder.save();
         }
@@ -148,8 +147,27 @@ $v_.on("playing", function(){
     doToon()
 });
 
-$('#captureMovieButton').on('click', function(e) {
+function animGifFinish() {
+    captureAnim = false;
+    animGifRecorder.finish();
+    clearTimeout(animGifTimmer);
+}
+
+function animGifStart() {
     captureAnim = true;
+}
+
+$('#captureMovieButton').on('click', function(e) {
+    animGifStart();
+});
+
+$('#rec .rec-start').on('click', function() {
+    $('#rec').addClass('rec');
+    animGifStart();
+});
+$('#rec .rec-stop').on('click', function() {
+    $('#rec').removeClass('rec');
+    animGifFinish();
 });
 
 $('#tweetButton').on('click', function(e) {

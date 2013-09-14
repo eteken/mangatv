@@ -45,9 +45,31 @@ form:hover{
 	color: black;
 	width: 200px;
 	height: auto;
+<<<<<<< HEAD
 };
 
 #anim-result {
   width: 300px;
   height: 400px;
 }
+=======
+}
+
+#rec {
+	position: absolute;
+	top: 2%;
+	right: 13%;
+}
+
+.rec .rec-start {
+	display: none;	
+}
+.rec .rec-stop {
+	display: block;
+}
+.rec-stop {
+	display: none;
+}
+
+
+>>>>>>> c17f0d5ec4cc2729e07dfa123b2a6511902a374b

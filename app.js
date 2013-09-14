@@ -28,10 +28,18 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+(function() {
+    if (!fs.existsSync(movieDataFilePath)) {
+        return;
+    }
+    var movieDataContent = fs.readFileSync(movieDataFilePath, {encoding: 'utf8'});
+    movieData = JSON.parse(movieDataContent);
+})();
+
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+https.createServer(options, app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 

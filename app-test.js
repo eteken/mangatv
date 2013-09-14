@@ -18,6 +18,8 @@ var app = express()
     ca: fs.readFileSync('keys/spdy-csr.pem')
   };
 
+var imageData = [];
+var imageDataFilePath = './data/image-data.json';
 
 app.configure(function(){
   app.set('port', process.env.PORT || 4443);
@@ -35,6 +37,15 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+(function() {
+    if (!fs.existsSync(imageDataFilePath)) {
+        return;
+    }
+    var imgDataContent = fs.readFileSync(imageDataFilePath, {encoding: 'utf8'});
+    imageData = JSON.parse(imgDataContent);
+    
+})();
+
 app.get('/', routes.index);
 app.get('/users', user.list);
 
@@ -47,17 +58,37 @@ http.createServer(app).listen(3002, function(){
 });
 
 app.post('/agif/:fileName', function(req, res) {
-//    var fileName = req.params.fileName;
-//    var image = req.body;
+    var twitterId = req.body.twitterId;    
+    var targetPath = '/upload/agif/' + fileName;
     var imageFile = req.files.image;
     var uploadedFilePath = imageFile.path;
-    var targetPath = '/upload/agif/' + imageFile.filename;
-    var saveFilePath = __dirname + '/public' + targetPath;
+    var fileName = imageFile.filename;
+    var saveFilePath = getUploadedImagePath(fileName);
     fs.rename(uploadedFilePath, saveFilePath, function (err) {
         if (err) {
             res.send(500, err);
         } else {
+            imageData.push({
+                fileName: fileName,
+                twitterId: twitterId
+            });
+            storeImageData(function(err) {
+                if (err) {
+                    console.error(err);
+                }
+            });
             res.send(200, targetPath);
         }
     });
 });
+
+function getUploadedImagePath(fileName) {
+    var targetPath = '/upload/agif/' + fileName;
+    var saveFilePath = __dirname + '/public' + targetPath;
+    return saveFilePath;
+}
+function storeImageData(callback) {
+    fs.writeFile(imageDataFilePath, JSON.stringify(imageData), function(err) {
+        callback(err);
+    });
+}

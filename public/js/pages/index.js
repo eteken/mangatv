@@ -243,6 +243,5 @@ $('#tweetButton').on('click', function(e) {
     window.open(windowUrl, 'twitter', 'width=480,height=360');
     if (animGifBlob) {
         URL.revokeObjectURL(animGifBlob);
-        animGifBlob = null;
     }
  });

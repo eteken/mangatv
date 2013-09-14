@@ -149,7 +149,8 @@ function animGifFinish() {
     captureAnim = false;
     animGifRecorder.finish();
     clearTimeout(animGifTimer);
-    $('#rec').removeClass('rec');
+    $('body').removeClass('rec');
+    stopRecCounter();
     console.log('gif recording end');
 }
 
@@ -160,29 +161,32 @@ function animGifStart() {
 var recCounterTimer;
 function startRecCounter(ms) {
     var recConter = $('#rec-time');
-    var last = new Date().getTime() + ms;
+    // var last = new Date().getTime() + ms;
 
+    var sec = Math.floor(ms/1000);
+    recConter.text(sec);
     recCounterTimer = setInterval(function(){
-        var now = new Date().getTime();
-        var rest = last - now;
-        if( rest > 0 ){
-            var min=Math.floor(rest/1000/60);
-            var sec=Math.floor(rest/1000)-min*60;
-            var mil=rest-Math.floor(rest/1000)*1000;
-            str = sec;
-            // チューニングしてintervalも1000から10に戻す
+        // var now = new Date().getTime();
+        // var rest = last - now;
+        if ( sec > 0 ) {
+        // if( rest > 0 ){
+            // var min=Math.floor(rest/1000/60);
+            // var sec=Math.floor(rest/1000)-min*60;
+            // var mil=rest-Math.floor(rest/1000)*1000;
             // str = ("00"+sec.toString(10)).slice(-2) + "."
             //     + ("000"+mil.toString(10)).slice(-3).slice(0,3);
+            str = --sec;
         } else {
-            str = '00.000';
+            // str = '00.000';
+            str = 0;
             clearInterval(recCounterTimer);
         }
         recConter.text(str);
     }, 1000);
 }
 
-function stopRecCounter(ms) {
-
+function stopRecCounter() {
+    clearInterval(recCounterTimer);
 }
 
 $('#captureMovieButton').on('click', function(e) {
@@ -200,7 +204,7 @@ $('#rec .rec-start').on('click', function() {
         if ( timerCount === 0 ) {
             clearInterval(timer);
             startCounter.hide();
-            $('#rec').addClass('rec');
+            $('body').addClass('rec');
             animGifStart();
             startRecCounter(REC_TIME);
         } else {
@@ -209,7 +213,7 @@ $('#rec .rec-start').on('click', function() {
     }, 1000);
 });
 $('#rec .rec-stop').on('click', function() {
-    $('#rec').removeClass('rec');
+    $('body').removeClass('rec');
     animGifFinish();
 });
 

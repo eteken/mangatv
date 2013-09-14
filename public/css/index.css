@@ -55,13 +55,17 @@ form:hover{
 }
 
 .rec .rec-start {
-	display: none;	
+	display: none;
 }
 .rec .rec-stop {
 	display: block;
 }
 .rec-stop {
 	display: none;
+  cursor: pointer;
+}
+.rec-start {
+  cursor: pointer;
 }
 #rec-time {
 	display: none;

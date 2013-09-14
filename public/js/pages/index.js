@@ -247,11 +247,11 @@ $('#close-btn').on('click', function(){
 
 $('#tweetButton').on('click', function(e) {
     var twitterId = $('#twitterId').val();
-    if (!twitterId) {
-        alert('Twitter IDが入力されていません。');
+    var handleName = $('#handleName').val();
+    if (!twitterId && !handleName) {
+        alert('Twitter ID、もしくはハンドルネームが入力されていません。');
         return;
     }
-    var handleName = $('#handleName').val();
     var movieId = String(Date.now());
     var fileName = movieId + '.gif';
     var xhr = new XMLHttpRequest();
@@ -274,7 +274,8 @@ $('#tweetButton').on('click', function(e) {
     xhr.send(formData);
     var movieUrl = location.protocol + '//' + location.host + '/movies/' + movieId;
     var windowUrl = 'https://twitter.com/intent/tweet?hashtags=html5j&via=html5j&text=';
-    var tweet = encodeURIComponent('.@' + twitterId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);
+    var actorId = twitterId ? '.@' + twitterId : handleName;
+    var tweet = encodeURIComponent(actorId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);
     windowUrl += tweet;
     window.open(windowUrl, 'twitter', 'width=480,height=360');
     if (animGifBlob) {

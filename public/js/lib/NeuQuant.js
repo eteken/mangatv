@@ -106,15 +106,15 @@
 		
 		// typedef int pixel[4]; /* BGRc */
 		/*private*/ var network/*Array*/; /* the network itself - [netsize][4] */
-		/*protected*/ var netindex/*Array*/ = new Array();
+		/*protected*/ var netindex/*Array*/ = new Uint8Array(256);
 		
 		/* for network lookup - really 256 */
-		/*private*/ var bias/*Array*/ = new Array();
+		/*private*/ var bias/*Array*/ = new Int32Array(256);
 		
 		/* bias and freq arrays for learning */
-		/*private*/ var freq/*Array*/ = new Array();
-		/*private*/ var radpower/*Array*/ = new Array();
-		
+		/*private*/ var freq/*Array*/ = new Int16Array(256);
+		/*private*/ var radpower/*Array*/ = new Float32Array(32);
+
 		var NeuQuant = exports.NeuQuant = function NeuQuant(thepic/*ByteArray*/, len/*int*/, sample/*int*/)
 		{
 			

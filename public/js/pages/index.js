@@ -12,6 +12,7 @@ var $v_ = $("video")
 , saveCanvasNeeded
 , filter_options = {"edge": true, "tone": true}
 , captureAnim = false
+, animGifRecorder = new AnimGifRecorder($c_[0])
 ;
 
 var REC_TIME = 10000;
@@ -70,6 +71,7 @@ $("form p.filter input").on("change", function(e){
     filter_options[id_] = !!$(this)[0].checked
 })
 
+<<<<<<< HEAD
 var AnimGifRecorder = function() {
     this.encoder = encoder = new GIFEncoder();
     encoder.setRepeat(0);
@@ -102,6 +104,8 @@ AnimGifRecorder.prototype = {
 var animGifRecorder = new AnimGifRecorder();
 var animGifTimmer;
 
+=======
+>>>>>>> 922a06197ab725ed6138c61e40ae251c0427d4b8
 // Videoの再生が始まったら、JPEGの取得を開始する。
 $v_.on("playing", function(){
     // canvas(不可視)のサイズをvideoサイズに変更
@@ -163,13 +167,14 @@ $v_.on("playing", function(){
                 animGifTimmer = setTimeout(function() {
                     animGifRecorder.finish();
                     console.log('gif recording end');
-                    location.href = animGifRecorder.toDataURL();
+//                    location.href = animGifRecorder.toDataURL();
+                    var blob = animGifRecorder.toBlob();
+                    location.href = URL.createObjectURL(blob);
                 }, REC_TIME);
             }
             animGifRecorder.save();
         }
         MyPow.showFaceSquare();
-        // MyPow.showSpeech("テストテストaaaaaaaaaaaaaaaa")
         requestAnimationFrame(doToon)
 //        stats.update();
     }

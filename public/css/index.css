@@ -62,5 +62,13 @@ form:hover{
 .rec-stop {
 	display: none;
 }
+#rec-time {
+	display: block;
+	font-weight: bold;
+	font-size: 3em;
+}
 
+.rec #rec-time {
+	display: block;
+}
 

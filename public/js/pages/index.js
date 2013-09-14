@@ -91,6 +91,8 @@ $v_.on("playing", function(){
     $("#full").css({"left": pos_.left + "px", "top": 0, "width": w_, "height": h_})
 
 
+    var recConter = $('#rec-time');
+    var recEndTime;
 
     // ref http://www.slideshare.net/masayukimaekawa/java-script-14727253
     var doToon = function(){
@@ -128,13 +130,25 @@ $v_.on("playing", function(){
         // GIFアニメの保存
         if (captureAnim) {
             if (!animGifRecorder.recording) {
+                recEndTime = new Date().getTime() + REC_TIME;
                 animGifRecorder.start();
                 console.log('gif recording start');
-                animGifTimer = setTimeout(function() {
+                // animGifTimer = setTimeout(function() {
+                //     animGifFinish();
+                //     animGifBlob = animGifRecorder.toBlob();
+                //     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
+                // }, REC_TIME);
+            } else {
+                var now = new Date().getTime();
+                var rest = recEndTime - now;
+
+                if ( rest > 0 ) {
+                    recConter.text(timerFormat(rest));
+                } else {
                     animGifFinish();
                     animGifBlob = animGifRecorder.toBlob();
                     document.getElementById('anim-result').src = URL.createObjectURL(animGifBlob);
-                }, REC_TIME);
+                }
             }
             animGifRecorder.save();
         }
@@ -159,34 +173,41 @@ function animGifStart() {
 }
 
 var recCounterTimer;
-function startRecCounter(ms) {
-    var recConter = $('#rec-time');
-    // var last = new Date().getTime() + ms;
+// function startRecCounter(ms) {
+//     var recConter = $('#rec-time');
+//     // var last = new Date().getTime() + ms;
 
-    var sec = Math.floor(ms/1000);
-    recConter.text(sec);
-    recCounterTimer = setInterval(function(){
-        // var now = new Date().getTime();
-        // var rest = last - now;
-        if ( sec > 0 ) {
-        // if( rest > 0 ){
-            // var min=Math.floor(rest/1000/60);
-            // var sec=Math.floor(rest/1000)-min*60;
-            // var mil=rest-Math.floor(rest/1000)*1000;
-            // str = ("00"+sec.toString(10)).slice(-2) + "."
-            //     + ("000"+mil.toString(10)).slice(-3).slice(0,3);
-            str = --sec;
-        } else {
-            // str = '00.000';
-            str = 0;
-            clearInterval(recCounterTimer);
-        }
-        recConter.text(str);
-    }, 1000);
-}
+//     var sec = Math.floor(ms/1000);
+//     recConter.text(sec);
+//     recCounterTimer = setInterval(function(){
+//         // var now = new Date().getTime();
+//         // var rest = last - now;
+//         if ( sec > 0 ) {
+//         // if( rest > 0 ){
+//             // var min=Math.floor(rest/1000/60);
+//             // var sec=Math.floor(rest/1000)-min*60;
+//             // var mil=rest-Math.floor(rest/1000)*1000;
+//             // str = ("00"+sec.toString(10)).slice(-2) + "."
+//             //     + ("000"+mil.toString(10)).slice(-3).slice(0,3);
+//             str = --sec;
+//         } else {
+//             // str = '00.000';
+//             str = 0;
+//             clearInterval(recCounterTimer);
+//         }
+//         recConter.text(str);
+//     }, 1000);
+// }
 
 function stopRecCounter() {
     clearInterval(recCounterTimer);
+}
+
+function timerFormat(ms) {
+    var min = Math.floor(ms/1000/60);
+    var sec = Math.floor(ms/1000)-min*60;
+    var mil = ms-Math.floor(ms/1000)*1000;
+    return  ("00"+sec.toString(10)).slice(-2) + "." + ("000"+mil.toString(10)).slice(-3).slice(0,3);
 }
 
 $('#captureMovieButton').on('click', function(e) {
@@ -206,7 +227,7 @@ $('#rec .rec-start').on('click', function() {
             startCounter.hide();
             $('body').addClass('rec');
             animGifStart();
-            startRecCounter(REC_TIME);
+            // startRecCounter(REC_TIME);
         } else {
             startCounter.text(timerCount);
         }

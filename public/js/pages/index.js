@@ -128,6 +128,11 @@ $v_.on("playing", function(){
                 
             // そうでない場合は、3秒間表示する
             } else {
+
+                if ( soundCommand === 'don' || soundCommand === 'ban' ) {
+                    MyPow.pow(ctx_);
+                }
+
                 setTimeout(function() {
                     soundCommand = null;
                 }, 3000);
@@ -294,4 +299,7 @@ $('#tweetButton').on('click', function(e) {
     if (animGifBlob) {
         URL.revokeObjectURL(animGifBlob);
     }
+    setTimeout(function(){
+        $('#rec-result').fadeOut();
+    }, 2000);
  });

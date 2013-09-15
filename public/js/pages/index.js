@@ -299,7 +299,7 @@ $('#tweetButton').on('click', function(e) {
     if (animGifBlob) {
         URL.revokeObjectURL(animGifBlob);
     }
-    setTimeout(function(){
-        $('#rec-result').fadeOut();
-    }, 2000);
+    // setTimeout(function(){
+    //     $('#rec-result').fadeOut();
+    // }, 2000);
  });

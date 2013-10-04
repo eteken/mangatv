@@ -324,7 +324,7 @@
 		    indexedPixels = [];
             if(nq === null) nq = new NeuQuant(pixels, len, sample);
 		    // initialize quantizer
-		    colorTab = nq.process(); // create reduced palette
+            if(colorTab === null) colorTab = nq.process(); // create reduced palette
 		    // map image pixels to new palette
 		    var k/*int*/ = 0;
 		    for (var j/*int*/ = 0; j < nPix; j++) {

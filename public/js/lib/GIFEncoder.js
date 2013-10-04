@@ -18,6 +18,8 @@
 	
 	GIFEncoder = function()
 	{
+        var nq = null;
+
 	    for(var i = 0, chr = {}; i < 256; i++)
         chr[i] = String.fromCharCode(i);
         
@@ -320,7 +322,7 @@
 			var len/*int*/ = pixels.length;
 		    var nPix/*int*/ = len / 3;
 		    indexedPixels = [];
-		    var nq/*NeuQuant*/ = new NeuQuant(pixels, len, sample);
+            if(nq === null) nq = new NeuQuant(pixels, len, sample);
 		    // initialize quantizer
 		    colorTab = nq.process(); // create reduced palette
 		    // map image pixels to new palette

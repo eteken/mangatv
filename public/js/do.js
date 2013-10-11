@@ -1,15 +1,20 @@
 
-var stream = new Stream()
-	, manga = new Manga()
-	, record = new Record()
-	, gifrecorder = new AnimGifRecorder()
-	, deco
-	, merger = new Merger()
+// 下準備
+//////////////////////////////////////////////////////
+
+var stream = new Stream() // 映像ストリーム
+	, manga = new Manga() // マンガ化処理
+	, record = new Record() // 画像録画
+	, deco_b // デコ用（下線）
+	, deco_f // デコ用（上線）
+	, merger = new Merger() // 録画画像とデコをマージする
+	, gifrecorder = new AnimGifRecorder() // GIF化処理
 
 $("#manga").hide();
 $("#animation").hide();
 
 // マンガストリーム開始
+//////////////////////////////////////////////////////
 
 stream.on('stream', function(stream){
 	startManga(stream)
@@ -19,13 +24,13 @@ var startManga = function(stream){
 	$("#animation").hide();
 	$("#manga").fadeIn();
 	$("#status").html("ヤッター")
-	
+
 	if(stream) manga.start(stream)
 }
 
 
 // 録画開始
-
+//////////////////////////////////////////////////////
 $('#record').on('click', function(){
 	record.start();
 })
@@ -44,15 +49,24 @@ record.on('completed', function(e){
 
 
 // デコ開始
-
+//////////////////////////////////////////////////////
 var startDeco = function(){
 	$("#manga").hide();
 	$("#animation").fadeIn('slow');
 
+	// 録画画像表示
 	record.check();
+
+	// デコ用のキャンバスを表示（下線のレイヤと、上線のレイヤ）
 	deco_b = new Deco({line_width: 14, line_color: "#fff"});
 	deco_f = new Deco();
 }
+
+
+
+//
+// GIF化処理
+/////////////////////////////////////////////////////
 
 $('#build-gif').on('click', function(){
 	var contexts = record.getContexts();

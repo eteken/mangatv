@@ -32,7 +32,4 @@ var Merger;
 
 		return ctx;
 	}
-
-
-
 }(window))

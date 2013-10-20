@@ -23,7 +23,7 @@ stream.on('stream', function(stream){
 var startManga = function(stream){
 	$("#animation").hide();
 	$("#manga").fadeIn();
-	$("#status").html("ヤッター")
+	$("#status").html("＼(^o^)／ ヤッター")
 
 	if(stream) manga.start(stream)
 }

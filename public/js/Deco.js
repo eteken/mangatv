@@ -25,6 +25,8 @@ var Deco;
 		this.canvas.style.left = "0px";
 		// this.canvas.style.background = "#f00"; /* debug */
 
+        this.canvasRect = this.canvas.getBoundingClientRect();
+
 		this.handler();
 	}
 
@@ -47,7 +49,7 @@ var Deco;
 			if(drawing){
 				var x = e.layerX, y = e.layerY;
 				if(!!prev) {
-					this.ctx.moveTo(prev.x, prev.y)
+					this.ctx.moveTo(prev.x, prev.y);
 					this.ctx.lineTo(x, y);
 					this.ctx.stroke();
 					prev = {x: x, y: y}
@@ -56,6 +58,42 @@ var Deco;
 				}
 			}
 		}.bind(this), false)
+        this.opts.node.addEventListener("touchstart", function(e){
+            e.preventDefault();
+            drawing = true;
+            prev = null;
+        }, false)
+        this.opts.node.addEventListener("touchmove", function(e){
+            e.preventDefault();
+            var touches = e.touches;
+            if(drawing){
+                var x = touches[0].pageX - this.canvasRect.left;
+                var y = touches[0].pageY - this.canvasRect.top;
+                if(!!prev) {
+                    this.ctx.moveTo(prev.x, prev.y);
+                    this.ctx.lineTo(x, y);
+                    this.ctx.stroke();
+                    prev = {x: x, y: y}
+                } else {
+                    prev = {x: x, y: y}
+                }
+            }
+        }.bind(this), false)
+        this.opts.node.addEventListener("touchend", function(e){
+            e.preventDefault();
+            drawing = false;
+            prev = null;
+        }, false)
+        this.opts.node.addEventListener("touchcancel", function(e){
+            e.preventDefault();
+            drawing = false;
+            prev = null;
+        }, false)
+        this.opts.node.addEventListener("touchleave", function(e){
+            e.preventDefault();
+            drawing = false;
+            prev = null;
+        }, false)
 	}
 
 	Deco.prototype.getContext = function(){

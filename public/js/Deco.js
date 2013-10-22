@@ -22,7 +22,9 @@ var Deco;
                     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                     ctx.drawImage(canvasPic, 0, 0);
                 }.bind(ctx, canvasPic));
+                return this.cStep;
             }
+            else return -1;
         }
     }
 
@@ -63,6 +65,24 @@ var Deco;
 		this.ctx.strokeStyle = this.opts.line_color;
 		this.ctx.lineCap = "round";
         this.undoManger = new UndoManager();
+        this.undoManger.push(this.canvas.toDataURL());
+
+        jQuery.fn.disabled = function(flag) {
+            if (undefined == flag) {
+                return undefined != jQuery(this).attr("disabled");
+            }
+            return this.each(function(){
+                if (flag) {
+                    if (undefined == jQuery(this).attr("disabled")) {
+                        jQuery(this).attr("disabled", "disabled");
+                    }
+                } else {
+                    if (undefined != jQuery(this).attr("disabled")) {
+                        jQuery(this).removeAttr("disabled");
+                    }
+                }
+            });
+        }
 
 		this.opts.node.addEventListener("mousedown", function(){
 			drawing = true;
@@ -72,6 +92,7 @@ var Deco;
 			drawing = false;
 			prev = null;
             this.undoManger.push(this.canvas.toDataURL());
+            jQuery($('#undo')).disabled(false);
 		}.bind(this), false)
 		this.opts.node.addEventListener("mousemove", function(e){
 			if(drawing){
@@ -114,37 +135,62 @@ var Deco;
             drawing = false;
             prev = null;
             this.undoManger.push(this.canvas.toDataURL());
+            jQuery($('#undo')).disabled(false);
         }.bind(this), false)
         this.opts.node.addEventListener("touchcancel", function(e){
             e.preventDefault();
             drawing = false;
             prev = null;
             this.undoManger.push(this.canvas.toDataURL());
+            jQuery($('#undo')).disabled(false);
         }.bind(this), false)
         this.opts.node.addEventListener("touchleave", function(e){
             e.preventDefault();
             drawing = false;
             prev = null;
             this.undoManger.push(this.canvas.toDataURL());
+            jQuery($('#undo')).disabled(false);
         }.bind(this), false)
 
         var self = this;
         $('#undo').on('click', function(){
-            this.undoManger.undo(this.ctx);
+            if(this.undoManger.undo(this.ctx) <= 0) jQuery($('#undo')).disabled(true);
         }.bind(this))
 
         if(this.ctx.strokeStyle !== "#ffffff"){
+            jQuery($('#red')).disabled(true);
+            jQuery($('#green')).disabled(false);
+            jQuery($('#blue')).disabled(false);
+            jQuery($('#black')).disabled(false);
+
             $('#red').on('click', function(){
                 this.ctx.strokeStyle = "#ff0000";
+                $('red').disabled("disabled", "disabled");
+                jQuery($('#red')).disabled(true);
+                jQuery($('#green')).disabled(false);
+                jQuery($('#blue')).disabled(false);
+                jQuery($('#black')).disabled(false);
             }.bind(this))
             $('#green').on('click', function(){
                 this.ctx.strokeStyle = "#00ff00";
+                jQuery($('#red')).disabled(false);
+                jQuery($('#green')).disabled(true);
+                jQuery($('#blue')).disabled(false);
+                jQuery($('#black')).disabled(false);
             }.bind(this))
             $('#blue').on('click', function(){
                 this.ctx.strokeStyle = "#0000ff";
+                jQuery($('#red')).disabled(false);
+                jQuery($('#green')).disabled(false);
+                jQuery($('#blue')).disabled(true);
+                jQuery($('#black')).disabled(false);
             }.bind(this))
             $('#black').on('click', function(){
                 this.ctx.strokeStyle = "#000000";
+                jQuery($('#red')).disabled(false);
+                jQuery($('#green')).disabled(false);
+                jQuery($('#blue')).disabled(false);
+                jQuery($('#black')).disabled(true);
             }.bind(this))
         }
 	}

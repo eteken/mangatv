@@ -132,6 +132,21 @@ var Deco;
         $('#undo').on('click', function(){
             this.undoManger.undo(this.ctx);
         }.bind(this))
+
+        if(this.ctx.strokeStyle !== "#ffffff"){
+            $('#red').on('click', function(){
+                this.ctx.strokeStyle = "#ff0000";
+            }.bind(this))
+            $('#green').on('click', function(){
+                this.ctx.strokeStyle = "#00ff00";
+            }.bind(this))
+            $('#blue').on('click', function(){
+                this.ctx.strokeStyle = "#0000ff";
+            }.bind(this))
+            $('#black').on('click', function(){
+                this.ctx.strokeStyle = "#000000";
+            }.bind(this))
+        }
 	}
 
 	Deco.prototype.getContext = function(){

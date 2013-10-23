@@ -11,13 +11,22 @@ var Deco;
             if (this.cStep < this.cPushArray.length) { this.cPushArray.length = this.cStep; }
             this.cPushArray.push(dataURL);
         },
+        revert: function(ctx, callback){
+            if (this.cStep >= 0) {
+                var canvasPic = new Image();
+                canvasPic.src = this.cPushArray[this.cStep];
+                canvasPic.addEventListener("load", function () {
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.drawImage(canvasPic, 0, 0);
+                    callback();
+                }.bind(ctx, canvasPic, callback));
+            }
+        },
         undo: function(ctx){
-            console.log("undo" + this.cStep);
             if (this.cStep > 0) {
                 this.cStep--;
                 var canvasPic = new Image();
                 canvasPic.src = this.cPushArray[this.cStep];
-                console.log(canvasPic.src);
                 canvasPic.addEventListener("load", function () {
                     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                     ctx.drawImage(canvasPic, 0, 0);
@@ -53,13 +62,12 @@ var Deco;
 		// this.canvas.style.background = "#f00"; /* debug */
 
         this.canvasRect = this.canvas.getBoundingClientRect();
-
 		this.handler();
 	}
 
 	Deco.prototype.handler = function(){
-        console.log("handler");
 		var drawing = false, prev = null;
+        this.currentStroke = [];
 		this.ctx = this.canvas.getContext('2d');
 		this.ctx.lineWidth = this.opts.line_width;
 		this.ctx.strokeStyle = this.opts.line_color;
@@ -82,16 +90,43 @@ var Deco;
                     }
                 }
             });
-        }
+        };
+
+        this.drawBeizer = function(){
+            this.ctx.beginPath();
+            var offset = Math.floor(this.currentStroke.length / 3) - 1;
+            for(var i = 0; i < offset; i++){
+                this.ctx.moveTo(this.currentStroke[i * 3].x, this.currentStroke[i * 3].y);
+                this.ctx.bezierCurveTo(
+                    this.currentStroke[i * 3 + 1].x,
+                    this.currentStroke[i * 3 + 1].y,
+                    this.currentStroke[i * 3 + 2].x,
+                    this.currentStroke[i * 3 + 2].y,
+                    this.currentStroke[i * 3 + 3].x,
+                    this.currentStroke[i * 3 + 3].y);
+                this.ctx.stroke();
+            }
+            for(var i = offset * 3; i < this.currentStroke.length; i++){
+                this.ctx.moveTo(this.currentStroke[i].x, this.currentStroke[i].y);
+                if(i + 1 < this.currentStroke.length) this.ctx.lineTo(this.currentStroke[i+1].x, this.currentStroke[i+1].y);
+                else this.ctx.lineTo(this.currentStroke[i].x, this.currentStroke[i].y);
+                this.ctx.stroke();
+            }
+
+        };
 
 		this.opts.node.addEventListener("mousedown", function(){
 			drawing = true;
 			prev = null;
-		}, false)
+            this.currentStroke.splice(0, this.currentStroke.length);
+        }.bind(this), false)
 		this.opts.node.addEventListener("mouseup", function(){
 			drawing = false;
 			prev = null;
-            this.undoManger.push(this.canvas.toDataURL());
+            this.undoManger.revert(this.ctx, function(){
+                this.drawBeizer();
+                this.undoManger.push(this.ctx.canvas.toDataURL());
+            }.bind(this));
             jQuery($('#undo')).disabled(false);
 		}.bind(this), false)
 		this.opts.node.addEventListener("mousemove", function(e){
@@ -103,8 +138,10 @@ var Deco;
 					this.ctx.lineTo(x, y);
 					this.ctx.stroke();
 					prev = {x: x, y: y}
+                    this.currentStroke.push(prev);
 				} else {
 					prev = {x: x, y: y}
+                    this.currentStroke.push(prev);
 				}
 			}
 		}.bind(this), false)

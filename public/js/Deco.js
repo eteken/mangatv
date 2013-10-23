@@ -1,6 +1,130 @@
 var Deco;
 
 (function(global){
+    MyJQuery = function(){}
+    MyJQuery.setEnabled = function(jqueryObj, flag){
+        if (flag) {
+            if (undefined != jQuery(jqueryObj).attr("disabled")) {
+                jQuery(jqueryObj).removeAttr("disabled");
+            }
+        } else {
+            if (undefined == jQuery(jqueryObj).attr("disabled")) {
+                jQuery(jqueryObj).attr("disabled", "disabled");
+            }
+        }
+    };
+
+    DecoEvent = function(){
+        this.observer = [];
+        this.observeObj = document.getElementById("animation");
+        MyJQuery.setEnabled($('#red'), false);
+        MyJQuery.setEnabled($('#green'), true);
+        MyJQuery.setEnabled($('#blue'), true);
+        MyJQuery.setEnabled($('#black'), true);
+    };
+    DecoEvent.prototype = {
+        setCanvasRect: function(rect){
+            this.canvasRect = rect;
+        },
+
+        handler: function(){
+            var drawing = false;
+
+            //mouse
+            this.observeObj.addEventListener("mousedown", function(){
+                drawing = true;
+                this.notifyObservers({"type":"start"});
+            }.bind(this), false);
+            this.observeObj.addEventListener("mouseup", function(){
+                drawing = false;
+                this.notifyObservers({"type":"end"});
+                MyJQuery.setEnabled($('#undo'), true);
+            }.bind(this), false);
+            this.observeObj.addEventListener("mousemove", function(e){
+                if(drawing){
+                    this.notifyObservers({"type": "move", "x": e.layerX, "y": e.layerY});
+                }
+            }.bind(this), false);
+
+            //touch UI
+            this.observeObj.addEventListener("touchstart", function(e){
+                e.preventDefault();
+                drawing = true;
+                this.notifyObservers({"type":"start"});
+            }.bind(this), false)
+            this.observeObj.addEventListener("touchend", function(e){
+                e.preventDefault();
+                drawing = false;
+                this.notifyObservers({"type":"end"});
+                MyJQuery.setEnabled($('#undo'), true);
+            }.bind(this), false);
+            this.observeObj.addEventListener("touchcancel", function(e){
+                e.preventDefault();
+                drawing = false;
+                this.notifyObservers({"type":"end"});
+                MyJQuery.setEnabled($('#undo'), true);
+            }.bind(this), false);
+            this.observeObj.addEventListener("touchleave", function(e){
+                e.preventDefault();
+                drawing = false;
+                this.notifyObservers({"type":"end"});
+                MyJQuery.setEnabled($('#undo'), true);
+            }.bind(this), false);
+            this.observeObj.addEventListener("touchmove", function(e){
+                e.preventDefault();
+                var touches = e.touches;
+                if(drawing){
+                    var x = touches[0].pageX - this.canvasRect.left;
+                    var y = touches[0].pageY - this.canvasRect.top;
+                    this.notifyObservers({"type": "move", "x": x, "y": y});
+                }
+            }.bind(this), false);
+
+            //Button
+            $('#red').on('click', function(){
+                this.notifyObservers({"type": "setColor", "color": "#ff0000"});
+                MyJQuery.setEnabled($('#red'), false);
+                MyJQuery.setEnabled($('#green'), true);
+                MyJQuery.setEnabled($('#blue'), true);
+                MyJQuery.setEnabled($('#black'), true);
+            }.bind(this));
+            $('#green').on('click', function(){
+                this.notifyObservers({"type": "setColor", "color": "#00ff00"});
+                MyJQuery.setEnabled($('#red'), true);
+                MyJQuery.setEnabled($('#green'), false);
+                MyJQuery.setEnabled($('#blue'), true);
+                MyJQuery.setEnabled($('#black'), true);
+            }.bind(this));
+            $('#blue').on('click', function(){
+                this.notifyObservers({"type": "setColor", "color": "#0000ff"});
+                MyJQuery.setEnabled($('#red'), true);
+                MyJQuery.setEnabled($('#green'), true);
+                MyJQuery.setEnabled($('#blue'), false);
+                MyJQuery.setEnabled($('#black'), true);
+            }.bind(this));
+            $('#black').on('click', function(){
+                this.notifyObservers({"type": "setColor", "color": "#000000"});
+                MyJQuery.setEnabled($('#red'), true);
+                MyJQuery.setEnabled($('#green'), true);
+                MyJQuery.setEnabled($('#blue'), true);
+                MyJQuery.setEnabled($('#black'), false);
+            }.bind(this));
+            $('#undo').on('click', function(){
+                this.notifyObservers({"type": "undo"});
+            }.bind(this))
+        },
+
+        //observer pattern
+        addObserver: function(observerItem){
+            this.observer.push(observerItem);
+        },
+        notifyObservers:  function(jsonValue){
+            this.observer.forEach(function(observerItem){
+                observerItem(jsonValue);
+            });
+        }
+    };
+
     UndoManager = function(){
         this.cPushArray = [];
         this.cStep = -1;
@@ -37,62 +161,43 @@ var Deco;
         }
     }
 
-	Deco = function(options){
-		new EventEmitter().apply(this);
+    Deco = function(options){
+        new EventEmitter().apply(this);
 
-		this.opts = {
-			width: 640,
-			height: 480,
-			line_width: 4,
-			line_color: "#f00",
-			node: document.getElementById("animation")
-		}
-		for(var key in options){
-			this.opts[key] = options[key];
-		}
+        this.prev = null;
 
-		this.canvas = document.createElement('canvas');
-		this.canvas.width = this.opts.width;
-		this.canvas.height = this.opts.height;
+        this.opts = {
+            width: 640,
+            height: 480,
+            line_width: 4,
+            line_color: "#f00",
+            node: document.getElementById("animation")
+        }
+        for(var key in options){
+            this.opts[key] = options[key];
+        }
 
-		this.opts.node.appendChild(this.canvas);
-		this.canvas.style.position = "absolute";
-		this.canvas.style.top = "0px";
-		this.canvas.style.left = "0px";
-		// this.canvas.style.background = "#f00"; /* debug */
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = this.opts.width;
+        this.canvas.height = this.opts.height;
 
-        this.canvasRect = this.canvas.getBoundingClientRect();
-		this.handler();
-	}
+        this.opts.node.appendChild(this.canvas);
+        this.canvas.style.position = "absolute";
+        this.canvas.style.top = "0px";
+        this.canvas.style.left = "0px";
+        // this.canvas.style.background = "#f00"; /* debug */
 
-	Deco.prototype.handler = function(){
-		var drawing = false, prev = null;
         this.currentStroke = [];
-		this.ctx = this.canvas.getContext('2d');
-		this.ctx.lineWidth = this.opts.line_width;
-		this.ctx.strokeStyle = this.opts.line_color;
-		this.ctx.lineCap = "round";
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.lineWidth = this.opts.line_width;
+        this.ctx.strokeStyle = this.opts.line_color;
+        this.ctx.lineCap = "round";
         this.undoManger = new UndoManager();
         this.undoManger.push(this.canvas.toDataURL());
+    };
 
-        jQuery.fn.disabled = function(flag) {
-            if (undefined == flag) {
-                return undefined != jQuery(this).attr("disabled");
-            }
-            return this.each(function(){
-                if (flag) {
-                    if (undefined == jQuery(this).attr("disabled")) {
-                        jQuery(this).attr("disabled", "disabled");
-                    }
-                } else {
-                    if (undefined != jQuery(this).attr("disabled")) {
-                        jQuery(this).removeAttr("disabled");
-                    }
-                }
-            });
-        };
-
-        this.drawBeizer = function(){
+    Deco.prototype = {
+        drawBeizer: function(){
             this.ctx.beginPath();
             var offset = Math.floor(this.currentStroke.length / 3) - 1;
             for(var i = 0; i < offset; i++){
@@ -112,128 +217,58 @@ var Deco;
                 else this.ctx.lineTo(this.currentStroke[i].x, this.currentStroke[i].y);
                 this.ctx.stroke();
             }
+        },
 
-        };
+        setColor: function(color){
+            if(this.ctx.strokeStyle != "#ffffff") this.ctx.strokeStyle = color;
+        },
 
-		this.opts.node.addEventListener("mousedown", function(){
-			drawing = true;
-			prev = null;
+        getContext: function(){
+            return this.ctx;
+        },
+
+        getCanvasRect: function(){
+            return this.canvas.getBoundingClientRect();
+        },
+
+        startDrawing: function(){
+            this.prev = null;
             this.currentStroke.splice(0, this.currentStroke.length);
-        }.bind(this), false)
-		this.opts.node.addEventListener("mouseup", function(){
-			drawing = false;
-			prev = null;
+        },
+
+        drawing: function(x, y){
+            if(!!this.prev) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.prev.x, this.prev.y);
+                this.ctx.lineTo(x, y);
+                this.ctx.stroke();
+                this.prev = {x: x, y: y};
+                this.currentStroke.push(this.prev);
+            } else {
+                this.prev = {x: x, y: y};
+                this.currentStroke.push(this.prev);
+            }
+        },
+
+        endDrawing: function(){
             this.undoManger.revert(this.ctx, function(){
                 this.drawBeizer();
                 this.undoManger.push(this.ctx.canvas.toDataURL());
             }.bind(this));
-            jQuery($('#undo')).disabled(false);
-		}.bind(this), false)
-		this.opts.node.addEventListener("mousemove", function(e){
-			if(drawing){
-				var x = e.layerX, y = e.layerY;
-				if(!!prev) {
-                    this.ctx.beginPath();
-					this.ctx.moveTo(prev.x, prev.y);
-					this.ctx.lineTo(x, y);
-					this.ctx.stroke();
-					prev = {x: x, y: y}
-                    this.currentStroke.push(prev);
-				} else {
-					prev = {x: x, y: y}
-                    this.currentStroke.push(prev);
-				}
-			}
-		}.bind(this), false)
-        this.opts.node.addEventListener("touchstart", function(e){
-            e.preventDefault();
-            drawing = true;
-            prev = null;
-        }, false)
-        this.opts.node.addEventListener("touchmove", function(e){
-            e.preventDefault();
-            var touches = e.touches;
-            if(drawing){
-                var x = touches[0].pageX - this.canvasRect.left;
-                var y = touches[0].pageY - this.canvasRect.top;
-                if(!!prev) {
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(prev.x, prev.y);
-                    this.ctx.lineTo(x, y);
-                    this.ctx.stroke();
-                    prev = {x: x, y: y}
-                } else {
-                    prev = {x: x, y: y}
-                }
-            }
-        }.bind(this), false)
-        this.opts.node.addEventListener("touchend", function(e){
-            e.preventDefault();
-            drawing = false;
-            prev = null;
-            this.undoManger.push(this.canvas.toDataURL());
-            jQuery($('#undo')).disabled(false);
-        }.bind(this), false)
-        this.opts.node.addEventListener("touchcancel", function(e){
-            e.preventDefault();
-            drawing = false;
-            prev = null;
-            this.undoManger.push(this.canvas.toDataURL());
-            jQuery($('#undo')).disabled(false);
-        }.bind(this), false)
-        this.opts.node.addEventListener("touchleave", function(e){
-            e.preventDefault();
-            drawing = false;
-            prev = null;
-            this.undoManger.push(this.canvas.toDataURL());
-            jQuery($('#undo')).disabled(false);
-        }.bind(this), false)
+        },
 
-        var self = this;
-        $('#undo').on('click', function(){
-            if(this.undoManger.undo(this.ctx) <= 0) jQuery($('#undo')).disabled(true);
-        }.bind(this))
+        undo: function(){
+            if(this.undoManger.undo(this.ctx) <= 0) MyJQuery.setEnabled($('#undo'), false);
+        },
 
-        if(this.ctx.strokeStyle !== "#ffffff"){
-            jQuery($('#red')).disabled(true);
-            jQuery($('#green')).disabled(false);
-            jQuery($('#blue')).disabled(false);
-            jQuery($('#black')).disabled(false);
-
-            $('#red').on('click', function(){
-                this.ctx.strokeStyle = "#ff0000";
-                $('red').disabled("disabled", "disabled");
-                jQuery($('#red')).disabled(true);
-                jQuery($('#green')).disabled(false);
-                jQuery($('#blue')).disabled(false);
-                jQuery($('#black')).disabled(false);
-            }.bind(this))
-            $('#green').on('click', function(){
-                this.ctx.strokeStyle = "#00ff00";
-                jQuery($('#red')).disabled(false);
-                jQuery($('#green')).disabled(true);
-                jQuery($('#blue')).disabled(false);
-                jQuery($('#black')).disabled(false);
-            }.bind(this))
-            $('#blue').on('click', function(){
-                this.ctx.strokeStyle = "#0000ff";
-                jQuery($('#red')).disabled(false);
-                jQuery($('#green')).disabled(false);
-                jQuery($('#blue')).disabled(true);
-                jQuery($('#black')).disabled(false);
-            }.bind(this))
-            $('#black').on('click', function(){
-                this.ctx.strokeStyle = "#000000";
-                jQuery($('#red')).disabled(false);
-                jQuery($('#green')).disabled(false);
-                jQuery($('#blue')).disabled(false);
-                jQuery($('#black')).disabled(true);
-            }.bind(this))
+        notify: function(){
+            return function(json){
+                if(json.type === "start") this.startDrawing();
+                else if(json.type === "end") this.endDrawing();
+                else if(json.type === "move") this.drawing(json.x, json.y);
+                else if(json.type === "setColor") this.setColor(json.color);
+                else if(json.type === "undo") this.undo();
+            }.bind(this);
         }
-	}
-
-	Deco.prototype.getContext = function(){
-		return this.ctx;
-	}
-
-}(window))
+    };
+}(window));

@@ -7,6 +7,7 @@ var stream = new Stream() // 映像ストリーム
 	, record = new Record() // 画像録画
 	, deco_b // デコ用（下線）
 	, deco_f // デコ用（上線）
+    , decoEvent // deco_bとdeco_fのイベントトリガ
 	, merger = new Merger() // 録画画像とデコをマージする
 	, gifrecorder = new AnimGifRecorder() // GIF化処理
 
@@ -60,6 +61,12 @@ var startDeco = function(){
 	// デコ用のキャンバスを表示（下線のレイヤと、上線のレイヤ）
 	deco_b = new Deco({line_width: 14, line_color: "#fff"});
 	deco_f = new Deco();
+
+    decoEvent = new DecoEvent();
+    decoEvent.setCanvasRect(deco_b.getCanvasRect());
+    decoEvent.handler();
+    decoEvent.addObserver(deco_b.notify());
+    decoEvent.addObserver(deco_f.notify());
 }
 
 

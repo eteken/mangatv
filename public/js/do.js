@@ -67,6 +67,8 @@ var startDeco = function(){
     decoEvent.handler();
     decoEvent.addObserver(deco_b.notify());
     decoEvent.addObserver(deco_f.notify());
+    MyJQuery.setEnabled($('#handleName'), true);
+    MyJQuery.setEnabled($('#build-gif'), true);
 }
 
 

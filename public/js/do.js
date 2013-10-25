@@ -67,6 +67,8 @@ var startDeco = function(){
     decoEvent.handler();
     decoEvent.addObserver(deco_b.notify());
     decoEvent.addObserver(deco_f.notify());
+    MyJQuery.setEnabled($('#handleName'), true);
+    MyJQuery.setEnabled($('#build-gif'), true);
 }
 
 
@@ -75,25 +77,64 @@ var startDeco = function(){
 // GIF化処理
 /////////////////////////////////////////////////////
 
-$('#build-gif').on('click', function(){
-	var contexts = record.getContexts();
-	var ctx_deco_b = deco_b.getContext();
-	var ctx_deco_f = deco_f.getContext();
-	gifrecorder.start();
+makeGif = function(){
+    var handleName = $('#handleName').val();
+    if (!handleName) {
+        alert('なまえをいれてください');
+        return;
+    }
 
-	for(var i = 0, l = contexts.length; i < l; i++) {
-		var ctx_ = merger.do([contexts[i], ctx_deco_b, ctx_deco_f])
-		gifrecorder.push(ctx_);
-	}
-	gifrecorder.finish();
-})
+    var contexts = record.getContexts();
+    var ctx_deco_b = deco_b.getContext();
+    var ctx_deco_f = deco_f.getContext();
+    gifrecorder.start();
+
+    for(var i = 0, l = contexts.length; i < l; i++) {
+        var ctx_ = merger.do([contexts[i], ctx_deco_b, ctx_deco_f])
+        gifrecorder.push(ctx_);
+    }
+    gifrecorder.finish();
+    var animGifBlob = gifrecorder.toBlob();
+
+    var movieId = String(Date.now());
+    var fileName = movieId + '.gif';
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '/upload/movies/' + fileName, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4)  {
+            return;
+        }
+        console.log('upload finished:' + xhr.responseText);
+    };
+    var formData = new FormData();
+
+    if (handleName) {
+        formData.append('actorName', handleName);
+    }
+    formData.append('movieId', movieId);
+    formData.append('movie', animGifBlob, fileName);
+    xhr.send(formData);
+    if (animGifBlob) {
+        URL.revokeObjectURL(animGifBlob);
+    }
+};
+
+$("#handleName").keypress(function (e) {
+    if(e.keyCode === 13){
+        makeGif();
+    }
+});
+
+$('#build-gif').on('click', function(){
+    makeGif();
+});
 
 gifrecorder.on('start', function(data){
 	$("#status").html("GIF化処理開始")
-})
+});
 gifrecorder.on('pushed', function(data){
 	$("#status").html("GIF化処理中："+data)
-})
+});
 gifrecorder.on('finished', function(data){
 
 	var dataURL = gifrecorder.toDataURL();
@@ -101,7 +142,7 @@ gifrecorder.on('finished', function(data){
 	window.open(dataURL)
 
 	startManga();
-})
+});
 
 
 

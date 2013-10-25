@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="./css/jquery-ui.css">
 <script src="./js/libs/jquery-2.0.3.min.js"></script>
+<script src="./js/ui/jquery-ui.js"></script>
 
 <script src="./js/libs/event_emitter.js"></script>
 <script src="./js/libs/GIFEncoder.js"></script>
@@ -16,6 +18,24 @@
 <script src="./js/AnimGifRecorder.js"></script>
 <script src="./js/Deco.js"></script>
 <script src="./js/Merger.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#slider-dark").slider({
+                value:81,
+                min:0,
+                max:255,
+                step:1,
+                range:"min"
+            });
+            $("#slider-bright").slider({
+                value:81,
+                min:0,
+                max:255,
+                step:1,
+                range:"min"
+            });
+        });
+    </script>
 </head>
 <body>
 	<div>
@@ -30,6 +50,13 @@
         <button id="black" disabled>black</button>
         <input id="handleName" placeholder="なまえをいれてね" disabled>
 		<button id="build-gif" disabled>build gif</button>
+        <br>
+        <div style="display: inline-block;_display: inline;">
+            dark: <div id="slider-dark" style="width:100px;margin:20px;"></div>
+        </div>
+        <div style="display: inline-block;_display: inline;">
+            bright: <div id="slider-bright" style="width:100px;margin:20px;"></div>
+        </div>
 	</div>
 	<div style="font-size: 2em;">
 		<span>Status : </span><span id="status"></span>

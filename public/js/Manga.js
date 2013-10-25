@@ -79,11 +79,11 @@ var Manga, Stream;
 		var draw_ = function(){
 			this.ctx.drawImage(this.video, 0, 0, this.w, this.h);
 			var imgData = this.ctx.getImageData(0, 0, this.w, this.h);
-			var filter_options = {edge: true, tone: true}
-
-
+            var dark = parseInt($("#slider-dark").slider( 'value'));
+            var bright = parseInt($("#slider-bright").slider( 'value'));
+            if(bright < dark) bright = dark + 1;
+			var filter_options = {edge: true, tone: true, dark: dark, bright: bright};
 	        var toon = doToon(imgData, this.img_toon, this.w, this.h, filter_options);
-
 
 	        this.ctx.putImageData(toon, 0, 0)
 			requestAnimationFrame(draw_);
@@ -109,7 +109,7 @@ var Manga, Stream;
         var p;
         var FILTER = 0xff00;
         var dark = options.dark || 86;
-        var bright = options.dark || 171;
+        var bright = options.bright || 171;
 
         var x, y, gra, dx_, dy_;
         for(var y = 1; y < height-1; y++){

@@ -5,10 +5,11 @@ var Manga, Stream;
  */
 
 (function(global){
-	navigator.getUserMedia_ = navigator.getUserMedia 
+	navigator.getUserMedia_ = navigator.getUserMedia
 		|| navigator.webkitGetUserMedia 
-		|| navigator.mozGetUserMedia 
-		|| null;
+		|| navigator.mozGetUserMedia
+        || navigator.msGetUserMedia
+        || null;
 
 	var createObjectURL_ = window.URL.createObjectURL;
 
@@ -59,8 +60,9 @@ var Manga, Stream;
 	Manga.prototype.createVideo_ = function(stream){
 		var url = createObjectURL_(stream)
 		this.video.src = url;
-		this.video.play();
-
+        this.video.addEventListener('loadedmetadata', function(e){
+		    this.video.play();
+        }.bind(this));
 	}
 	Manga.prototype.setupCanvas_ = function(){
 		this.w = this.video.videoWidth, this.h = this.video.videoHeight;

@@ -12,7 +12,7 @@ var $v_ = $("video")
 , saveCanvasNeeded
 , filter_options = {"edge": true, "tone": true}
 , captureAnim = false
-, animGifRecorder = new AnimGifRecorder($c_[0])
+, animGifRecorder = new AnimGifRecorder($c_[0], {delay: 800})
 , animGifBlob
 , animGifTimer
 , contextPath = $('#contextPath').val()

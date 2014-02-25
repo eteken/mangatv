@@ -104,14 +104,27 @@ form:hover{
 	left: 13%;
 	z-index: 998;
 }
-.rec .logo, .rec .html5j-logo {
-	display: none;
+.rec .logo, .rec footer {
+  display: none;
 }
 
+footer {
+  position: absolute;
+  bottom: 2%;
+  right: 13%;
+}
+footer img {
+  margin-left: 1em;
+}
+.hx-logo {
+  width: 130px;
+  background: white;
+  padding: 1em;
+}
 .html5j-logo {
-	position: absolute;
-	bottom: 2%;
-	right: 13%;
+/*  position: absolute;
+  bottom: 2%;
+  right: 13%;*/
 }
 
 #rec-result {

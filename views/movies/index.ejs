@@ -17,7 +17,7 @@
         var movie = movieData[i-1];
     %>
       <div class="item">
-        <a href="/movies/<%= movie.id %>">
+        <a href="./<%= movie.id %>">
           <img src="<%= contextPath + movie.path %>" class="movie">
         </a>
         <% if (movie.actor.twitterId) { %>

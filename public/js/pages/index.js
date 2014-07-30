@@ -38,6 +38,8 @@ navigator.webkitGetUserMedia({video: true, audio: false}, function(stream){
     var url = window.webkitURL.createObjectURL(stream);
     $v_[0].src = url;
     $v_[0].play();
+}, function(err){
+  throw err;
 });
 
 $("#dark").val(parseInt(effect.dark))

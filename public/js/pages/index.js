@@ -12,7 +12,7 @@ var $v_ = $("video")
 , saveCanvasNeeded
 , filter_options = {"edge": true, "tone": true}
 , captureAnim = false
-, animGifRecorder = new AnimGifRecorder($c_[0])
+, animGifRecorder = new AnimGifRecorder($c_[0], {delay: 800})
 , animGifBlob
 , animGifTimer
 , contextPath = $('#contextPath').val()
@@ -293,7 +293,7 @@ $('#tweetButton').on('click', function(e) {
     var movieUrl = location.protocol + '//' + location.host + contextPath + '/movies/' + movieId;
     var windowUrl = 'https://twitter.com/intent/tweet?hashtags=html5j&via=html5j&text=';
     var actorId = twitterId ? '.@' + twitterId : handleName;
-    var tweet = encodeURIComponent(actorId + ' さんに、マンガテレビに出演していただきました！ on Mozilla Festival ' + movieUrl);
+    var tweet = encodeURIComponent(actorId + ' さんに、マンガテレビに出演していただきました！ on デブサミ2014 ' + movieUrl);
     windowUrl += tweet;
     window.open(windowUrl, 'twitter', 'width=480,height=360');
     if (animGifBlob) {

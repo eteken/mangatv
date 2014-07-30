@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="10;">
     <title>動画一覧 | マンガテレビ</title>
     <!--
     <script src="js/lib/jquery-1.9.1.min.js"></script>
@@ -16,7 +17,7 @@
         var movie = movieData[i-1];
     %>
       <div class="item">
-        <a href="/movies/<%= movie.id %>">
+        <a href="./<%= movie.id %>">
           <img src="<%= contextPath + movie.path %>" class="movie">
         </a>
         <% if (movie.actor.twitterId) { %>
